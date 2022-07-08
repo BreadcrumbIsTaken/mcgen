@@ -26,8 +26,8 @@ mcgen gen your_servers_name_here
 
 |command|description|
 |  :-:  |    :-:    |
-|gen    |The command to generate a new server.|
-|config |The command to open the config file. The config file contains the plugins to automatically install when using the `gen` command.|
+|[gen](https://github.com/BreadcrumbIsTaken/mcgen#gen)|The command to generate a new server.|
+|[config](https://github.com/BreadcrumbIsTaken/mcgen#config)|The command to open the config file. The config file contains the plugins to automatically install when using the `gen` command.|
 
 #### `gen`
 
