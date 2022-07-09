@@ -4,27 +4,12 @@ use colored::*;
 use futures_util::StreamExt;
 use indicatif::{ProgressBar, ProgressStyle};
 use reqwest::Client;
-use serde::{Deserialize, Serialize};
 use tokio::{
     fs::{create_dir_all, File},
     io::AsyncWriteExt,
 };
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
-struct PluginsBuildData {
-    artifacts: Vec<Artifact>,
-    full_display_name: String,
-    number: u64,
-    url: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
-struct Artifact {
-    file_name: String,
-    relative_path: String,
-}
+use crate::{downloading::BuildData, gen::version_file::write_to_plugin_version_file};
 
 pub async fn download_plugins(
     path: &Path,
@@ -38,26 +23,34 @@ pub async fn download_plugins(
     for plugin in plugins {
         for (name, url) in plugin.iter() {
             let client = Client::builder().build()?;
-            let res = client.get(format!("{}/lastStableBuild/api/json", url)).send().await?;
-            let json_data = res.json::<PluginsBuildData>().await?;
+            let res = client
+                .get(format!("{}/lastStableBuild/api/json", url))
+                .send()
+                .await?;
+            let json_data = res.json::<BuildData>().await?;
 
             let mut jar_file = File::create(
-                plugins_folder
-                    .clone()
-                    .join(&json_data.artifacts[0].file_name),
+                &(*plugins_folder).join(&json_data.artifacts.as_ref().unwrap()[0].file_name),
             )
             .await?;
 
             println!(
                 "   Downloading plugin {} build {}",
                 name.bold().yellow(),
-                json_data.number.to_string().bold().yellow()
+                json_data
+                    .build
+                    .as_ref()
+                    .unwrap()
+                    .to_string()
+                    .bold()
+                    .yellow()
             );
 
             let mut jar_stream = client
                 .get(format!(
                     "{}artifact/{}",
-                    json_data.url, json_data.artifacts[0].relative_path
+                    json_data.url.as_ref().unwrap(),
+                    json_data.artifacts.as_ref().unwrap()[0].relative_path
                 ))
                 .send()
                 .await?
@@ -77,6 +70,22 @@ pub async fn download_plugins(
                 jar_file.write_all(&item.unwrap()).await?;
             }
             bar.finish_at_current_pos();
+
+            // TODO: Work on having multiple plugins appended to the `plugins` key and not have it manually set as one plugin.
+            write_to_plugin_version_file(
+                plugins_folder,
+                format!(
+                    r#"    - {}:
+        build: {}
+        file_name: {}
+        url: {}"#,
+                    name,
+                    json_data.build.unwrap(),
+                    json_data.artifacts.as_ref().unwrap()[0].file_name,
+                    url
+                ),
+            )
+            .await?;
         }
     }
     Ok(())

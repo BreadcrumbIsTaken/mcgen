@@ -5,14 +5,15 @@ mod config;
 mod consts;
 mod downloading;
 mod gen;
+mod updating;
 
 use clap::Parser;
-use cli::{Cli, Commands/* , ToUpdate*/};
+use cli::{Cli, Commands};
 use colored::*;
 use dirs::config_dir;
 use std::path::Path;
 
-use crate::{config::create::Config, gen::generation::generate_server};
+use crate::{config::Config, gen::generation::generate_server, updating::update};
 
 #[tokio::main]
 async fn main() {
@@ -34,23 +35,12 @@ async fn main() {
 
             generate_server(&dir, bungeecord, aikars_flags, &config).await;
         }
-        // Commands::Update { update } => match update {
-        //     ToUpdate::Plugins => {
-        //         println!("Updating plugins");
-        //     }
-        //     ToUpdate::Server => {
-        //         println!("Updating server");
-        //     }
-        //     ToUpdate::Both => {
-        //         println!("Updating both");
-        //     }
-        // },
+        Commands::Update { directories, check } => match update(directories, check).await {
+            Ok(_) => (),
+            Err(err) => eprintln!("Error updating server and/or plugins! Error: {}", err),
+        },
         Commands::Config {} => {
             config.open_config().expect("Error opening config!");
         }
-        // Commands::Add {
-        //     add: _,
-        //     create_dir: _,
-        // } => {}
     }
 }

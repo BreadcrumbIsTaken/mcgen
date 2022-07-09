@@ -4,28 +4,17 @@ use colored::*;
 use futures_util::StreamExt;
 use indicatif::{ProgressBar, ProgressStyle};
 use reqwest::Client;
-use serde::{Deserialize, Serialize};
 use tokio::{
     fs::{create_dir_all, File},
     io::AsyncWriteExt,
 };
 
 use crate::{
-    config::create::Config, consts::urls::PAPER_JSON_API_URL,
-    downloading::plugins::download_plugins,
+    config::Config,
+    consts::urls::PAPER_JSON_API_URL,
+    downloading::{plugins::download_plugins, BuildData},
+    gen::version_file::generate_version_file,
 };
-
-/// Stores data on the latest Minecraft versions for Paper.
-#[derive(Debug, Serialize, Deserialize, Clone)]
-struct MinecraftVersionsForPaperData {
-    versions: Vec<String>,
-}
-
-/// Stores data on the latest Paper builds.
-#[derive(Debug, Serialize, Deserialize, Clone)]
-struct PaperVersionBuildsData {
-    builds: Vec<u64>,
-}
 
 /// Downloads the latest Paper version.
 pub async fn download_paper(
@@ -43,10 +32,7 @@ pub async fn download_paper(
     if paper_path.exists() {
         Err(Box::new(Error::new(
             std::io::ErrorKind::AlreadyExists,
-            format!(
-                "The directory, '{}', already exists!",
-                path.display().to_string()
-            ),
+            format!("The directory, '{}', already exists!", path.display()),
         )))
     } else {
         // Expect the `Err` with a permissions error.
@@ -58,14 +44,16 @@ pub async fn download_paper(
         let client = Client::builder().build()?;
         let res = client.get(PAPER_JSON_API_URL).send().await?;
 
-        let json_data = res.json::<MinecraftVersionsForPaperData>().await?;
+        let json_data = res.json::<BuildData>().await?;
 
         let latest_version = json_data
             .versions
+            .as_ref()
+            .unwrap()
             .last()
             .ok_or("Could not get latest Paper version.");
 
-        let verion_builds = client
+        let version_builds = client
             .get(format!(
                 "{}/versions/{}",
                 PAPER_JSON_API_URL,
@@ -73,10 +61,12 @@ pub async fn download_paper(
             ))
             .send()
             .await?;
-        let version_builds_json_data = verion_builds.json::<PaperVersionBuildsData>().await?;
+        let version_builds_json_data = version_builds.json::<BuildData>().await?;
 
         let latest_build = *version_builds_json_data
             .builds
+            .as_ref()
+            .unwrap()
             .iter()
             // Get the latest version number (highest number)
             .max_by(|x, y| x.cmp(y))
@@ -128,20 +118,18 @@ pub async fn download_paper(
             }
         }
 
-        //     let versions_file = File::create(paper_path.join("mcgen.yml")).await;
-        //     let versions_file_contents = format!(
-        //         r#"servers:
-        // - Paper:
-        //     version: {}
-        //     build: {}"#,
-        //         latest_version.unwrap(),
-        //         latest_build
-        //     );
-        //     versions_file
-        //         .unwrap()
-        //         .write_all(versions_file_contents.as_bytes())
-        //         .await
-        //         .unwrap();
+        generate_version_file(
+            paper_path.clone().as_path(),
+            format!(
+                r#"server:
+    - Paper: 
+        version: {}
+        build: {}"#,
+                latest_version.unwrap(),
+                latest_build
+            ),
+        )
+        .await?;
 
         Ok(())
     }

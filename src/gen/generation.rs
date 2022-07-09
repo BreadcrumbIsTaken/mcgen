@@ -1,5 +1,5 @@
 use crate::{
-    config::create::Config,
+    config::Config,
     downloading::{bungeecord::download_bungeecord, paper::download_paper},
 };
 
@@ -21,20 +21,32 @@ pub async fn generate_server(
     config: &Config<'_>,
 ) {
     if using_bungeecord {
-        download_bungeecord(dir, &config)
+        download_bungeecord(dir, config)
             .await
-            .expect(&format!("{}", "Error downloading BungeeCord!".red()));
+            .unwrap_or_else(|err| {
+                eprintln!("{} {}", "Error downloading BungeeCord!".red(), err);
+                std::process::exit(1);
+            });
 
-        generate_start_script_bungeecord(dir).expect(&format!(
-            "{}",
-            "Error generating BungeeCord start script!".red()
-        ));
+        generate_start_script_bungeecord(dir).unwrap_or_else(|err| {
+            eprintln!(
+                "{} {}",
+                "Error generating BungeeCord start script!".red(),
+                err
+            );
+            std::process::exit(1);
+        });
     }
 
-    download_paper(dir, using_bungeecord, &config)
+    download_paper(dir, using_bungeecord, config)
         .await
-        .expect(&format!("{}", "Error downloading Paper!".red()));
+        .unwrap_or_else(|err| {
+            eprintln!("{} {}", "Error downloading Paper!".red(), err);
+            std::process::exit(1);
+        });
 
-    generate_start_script_paper(dir, aikars_flags, using_bungeecord)
-        .expect(&format!("{}", "Error generating Paper start script!".red()));
+    generate_start_script_paper(dir, aikars_flags, using_bungeecord).unwrap_or_else(|err| {
+        eprintln!("{} {}", "Error generating Paper start script!".red(), err);
+        std::process::exit(1);
+    });
 }

@@ -4,34 +4,17 @@ use colored::*;
 use futures_util::StreamExt;
 use indicatif::{ProgressBar, ProgressStyle};
 use reqwest::Client;
-use serde::{Deserialize, Serialize};
 use tokio::{
     fs::{create_dir_all, File},
     io::AsyncWriteExt,
 };
 
 use crate::{
-    config::create::Config, consts::urls::BUNGEECORD_JSON_API_URL,
-    downloading::plugins::download_plugins,
+    config::Config,
+    consts::urls::BUNGEECORD_JSON_API_URL,
+    downloading::{plugins::download_plugins, BuildData},
+    gen::version_file::generate_version_file,
 };
-
-/// Stores BungeeCord build data.
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
-struct BungeecordBuildData {
-    artifacts: Vec<Artifact>,
-    full_display_name: String,
-    number: u64,
-    url: String,
-}
-
-/// Stores BungeeCord build artifact data.
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
-struct Artifact {
-    file_name: String,
-    relative_path: String,
-}
 
 /// Downloads the latest BungeeCord jar to a given path.
 pub async fn download_bungeecord(
@@ -43,10 +26,7 @@ pub async fn download_bungeecord(
     if path.exists() {
         Err(Box::new(Error::new(
             std::io::ErrorKind::AlreadyExists,
-            format!(
-                "The directory, '{}', already exists!",
-                path.display().to_string()
-            ),
+            format!("The directory, '{}', already exists!", path.display()),
         )))
     } else {
         let bungeecord_path = path.join("bungeecord");
@@ -59,25 +39,26 @@ pub async fn download_bungeecord(
         let client = Client::builder().build()?;
         let res = client.get(BUNGEECORD_JSON_API_URL).send().await?;
 
-        let json_data = res.json::<BungeecordBuildData>().await?;
+        let json_data = res.json::<BuildData>().await?;
 
         let mut jar_file = File::create(
             bungeecord_path
                 .as_path()
-                .join(&json_data.artifacts[0].file_name),
+                .join(&json_data.artifacts.as_ref().unwrap()[0].file_name),
         )
         .await?;
 
         println!(
             "Downloading {} build {}",
             "BungeeCord".bold().cyan(),
-            json_data.number.to_string().bold().cyan(),
+            json_data.build.as_ref().unwrap().to_string().bold().cyan(),
         );
 
         let mut jar_stream = client
             .get(format!(
                 "{}artifact/{}",
-                json_data.url, json_data.artifacts[0].relative_path
+                json_data.url.as_ref().unwrap(),
+                json_data.artifacts.as_ref().unwrap()[0].relative_path
             ))
             .send()
             .await?
@@ -98,6 +79,17 @@ pub async fn download_bungeecord(
         }
         bar.finish_at_current_pos();
 
+        generate_version_file(
+            bungeecord_path.clone().as_path(),
+            format!(
+                r#"server:
+    - BungeeCord:
+        build: {}"#,
+                json_data.build.as_ref().unwrap()
+            ),
+        )
+        .await?;
+
         if let Some(data) = &config.config {
             let plugins = data
                 .default_plugins
@@ -108,21 +100,6 @@ pub async fn download_bungeecord(
                 .unwrap();
             download_plugins(bungeecord_path.clone().as_path(), plugins).await?;
         }
-
-        // println!("{:?}", config.config);
-
-        //     let versions_file = File::create(bungeecord_path.join("mcgen.yml")).await;
-        //     let versions_file_contents = format!(
-        //         r#"servers:
-        // - BungeeCord:
-        //     build: {}"#,
-        //         json_data.number
-        //     );
-        //     versions_file
-        //         .unwrap()
-        //         .write_all(versions_file_contents.as_bytes())
-        //         .await
-        //         .unwrap();
 
         Ok(())
     }

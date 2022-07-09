@@ -1,4 +1,4 @@
-use clap::{/*ArgEnum, */Parser, Subcommand};
+use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[clap(author = "Breadcrumb", version = "0.1.0", about = "Generate a barebones Minecraft server in seconds!", long_about = None)]
@@ -23,39 +23,19 @@ pub enum Commands {
         #[clap(long, short, value_parser)]
         aikars_flags: bool,
     },
-    // /// Updates plugins or server/bungeecord versions.
-    // Update {
-    //     /// Update the plugins or the server versions.
-    //     #[clap(value_parser, arg_enum, default_value = "both")]
-    //     update: ToUpdate,
-    // },
+    /// Updates plugins or server/bungeecord versions.
+    #[clap(
+        long_about = "Updates plugins or server/bungeecord versions. mcgen keeps track of versions via a text file called 'mcgen.txt'. mcgen will look for the mcgen.txt file in the current directory. If you want to update plugins in more than one directory (most likely for multiple servers or use of BungeeCord), then you need to pass in the directories to update. Is recursive if directories are given."
+    )]
+    Update {
+        /// A comma-then-space seperated list of directories to update the plugins/servers. Will look for the mcgen.txt file in the current directory if not set.
+        #[clap(value_parser)]
+        directories: Vec<String>,
+
+        /// Will check for any updates, but will not install them.
+        #[clap(long, short, value_parser)]
+        check: bool,
+    },
     /// Opens the config in your computer's default text editor.
     Config {},
-    // /// Add a Paper server or BungeeCord network to an already existing server.
-    // Add {
-    //     /// Add a Paper server or BungeeCord network to an already existing server.
-    //     #[clap(value_parser, arg_enum)]
-    //     add: ToAdd,
-
-    //     #[clap(long, short, value_parser)]
-    //     /// Choose whether or not to create a new directory to store contents of download in.
-    //     create_dir: bool,
-    // },
 }
-
-// #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ArgEnum)]
-// pub enum ToUpdate {
-//     /// Update plugins.
-//     Plugins,
-//     /// Update the server.
-//     Server,
-//     /// Update the server and plugins. (Default)
-//     Both,
-// }
-
-// #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ArgEnum)]
-// #[clap(rename_all = "lowercase")]
-// pub enum ToAdd {
-//     Paper,
-//     BungeeCord,
-// }
