@@ -32,7 +32,7 @@ mcgen gen your_servers_name_here
 ##### Arguments
 |argument|description|example|
 |   :-:  |    :-:    |  :-:  |
-|DIR|The directory to add the plugin to|myserver|
+|DIRECTORY|The directory to add the plugin to|myserver|
 |NAME|Name of the plugin|Denizen|
 |URL|Url to download the plugin. MUST HAVE A JENKINS API! Leave out the trailing slash.|https://ci.citizensnpcs.co/job/Denizen|
 
@@ -58,8 +58,25 @@ mcgen config
 ##### Flags
 |flags|description|example usage|long name|
 | :-: |    :-:    |     :-:     |   :-:   |
-|-a   | Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html).|`mcgen gen myserver -a`|--aikars-flags|
-|-b   | Choose whether or not to have a BungeeCord network.|`mcgen gen myserver -b`|--bungeecord|
+|-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html).|`mcgen gen myserver -a`|--aikars-flags|
+|-b   |Choose whether or not to have a BungeeCord network.|`mcgen gen myserver -b`|--bungeecord|
+
+##### Example
+```
+mcgen gen myserver -b -a
+```
+
+### `update`
+
+##### Arguments
+|argument|description|example|
+|   :-:  |    :-:    |  :-:  |
+|DIRECTORIES|A comma-then-space seperated list of directories to update the plugins/servers. Will look for the mcgen.txt file in the current directory if not set|
+
+##### Flags
+|flags|description|example usage|long name|
+| :-: |    :-:    |     :-:     |   :-:   |
+|-c   |Will check for any updates, but will not install them|`mcgen update myserver -c`|--check|
 
 ##### Example
 ```
