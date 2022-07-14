@@ -22,24 +22,49 @@ mcgen gen your_servers_name_here
 
 |command|description|
 |  :-:  |    :-:    |
-|[gen](https://github.com/BreadcrumbIsTaken/mcgen#gen)|The command to generate a new server.|
-|[config](https://github.com/BreadcrumbIsTaken/mcgen#config)|The command to open the config file. The config file contains the plugins to automatically install when using the `gen` command.|
+|[add](https://github.com/BreadcrumbIsTaken/mcgen#add)|Add additional plugins to an already existing server|
+|[config](https://github.com/BreadcrumbIsTaken/mcgen#config)|Opens the config in your computer's default text editor|
+|[gen](https://github.com/BreadcrumbIsTaken/mcgen#gen)|Generate a new server|
+|[update](https://github.com/BreadcrumbIsTaken/mcgen#update)|Updates plugins or server/bungeecord versions|
 
-#### `gen`
+### `add`
 
+##### Arguments
+|argument|description|example|
+|   :-:  |    :-:    |  :-:  |
+|DIR|The directory to add the plugin to|myserver|
+|NAME|Name of the plugin|Denizen|
+|URL|Url to download the plugin. MUST HAVE A JENKINS API! Leave out the trailing slash.|https://ci.citizensnpcs.co/job/Denizen|
+
+##### Example
+```
+mcgen add myserver Denizen https://ci.citizensnpcs.co/job/Denizen
+```
+
+### `config`
+
+##### Example
+```
+mcgen config
+```
+
+### `gen`
+
+##### Arguments
+|argument|description|example|
+|   :-:  |    :-:    |  :-:  |
+|DIR|The name of the directory to place contents of the Minecraft server|
+
+##### Flags
 |flags|description|example usage|long name|
 | :-: |    :-:    |     :-:     |   :-:   |
 |-a   | Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html).|`mcgen gen myserver -a`|--aikars-flags|
 |-b   | Choose whether or not to have a BungeeCord network.|`mcgen gen myserver -b`|--bungeecord|
 
-#### `config`
-
-No flags avaliable.
-
-## Coming soon
-
-- More accurate progress bars. 
-- `update` command to update BungeeCord, Paper, or plugins.
+##### Example
+```
+mcgen gen myserver -b -a
+```
 
 ###### License:
 

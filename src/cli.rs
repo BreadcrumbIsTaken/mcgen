@@ -46,7 +46,7 @@ pub enum Commands {
         #[clap(value_parser)]
         name: String,
 
-        /// URL to download plugin. MUST HAVE A JENKINS API!
+        /// URL to download plugin. MUST HAVE A JENKINS API! Leave out the trailing slash.
         #[clap(value_parser)]
         url: String,
     },
