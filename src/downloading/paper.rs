@@ -1,4 +1,4 @@
-use std::{io::Error, path::Path};
+use std::path::Path;
 
 use colored::*;
 use futures_util::StreamExt;
@@ -20,7 +20,7 @@ use crate::{
 pub async fn download_paper(
     dir: &str,
     using_bungeecord: bool,
-    config: &Config<'_>,
+    config: Option<&Config<'_>>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(dir);
     let paper_path = if using_bungeecord {
@@ -29,11 +29,14 @@ pub async fn download_paper(
         path.to_path_buf()
     };
 
-    if paper_path.exists() {
-        Err(Box::new(Error::new(
-            std::io::ErrorKind::AlreadyExists,
-            format!("The directory, '{}', already exists!", path.display()),
-        )))
+    if paper_path.join("paper.jar").exists() {
+        eprintln!(
+            "{} '{}' {}",
+            "The directory,".red(),
+            path.join("paper.jar").display(),
+            "already exists!".red()
+        );
+        std::process::exit(1);
     } else {
         // Expect the `Err` with a permissions error.
         // The path does not exist so it cannot error due to the path already existing.
@@ -94,10 +97,12 @@ pub async fn download_paper(
         let mut jar_data = client.get(paper_download_url).send().await?.bytes_stream();
 
         let bar = ProgressBar::new(2100);
+        bar.enable_steady_tick(100);
         bar.set_style(
             ProgressStyle::default_bar()
-                .template("[{bytes_per_sec}] {bar:50.green/blue} {pos:>6}/?")
-                .progress_chars("█▒-"),
+                .template("[{bytes_per_sec}] {bar:50.green/blue} {spinner}")
+                .progress_chars("█▒-")
+                .tick_strings(&["◜", "◠", "◝", "◞", "◡", "◟"]),
         );
 
         while let Some(item) = jar_data.next().await {
@@ -106,15 +111,17 @@ pub async fn download_paper(
         }
         bar.finish_at_current_pos();
 
-        if let Some(data) = &config.config {
-            let plugins = data
-                .default_plugins
-                .as_ref()
-                .unwrap()
-                .paper_plugins
-                .as_ref();
-            if let Some(plugins_list) = plugins {
-                download_plugins(paper_path.clone().as_path(), plugins_list).await?;
+        if let Some(conf) = &config {
+            if let Some(data) = &conf.config {
+                let plugins = data
+                    .default_plugins
+                    .as_ref()
+                    .unwrap()
+                    .paper_plugins
+                    .as_ref();
+                if let Some(plugins_list) = plugins {
+                    download_plugins(paper_path.clone().as_path(), plugins_list).await?;
+                }
             }
         }
 
@@ -128,9 +135,8 @@ pub async fn download_paper(
                 latest_version.unwrap(),
                 latest_build
             ),
-        )
-        .await?;
-
-        Ok(())
+        )?;
     }
+
+    Ok(())
 }

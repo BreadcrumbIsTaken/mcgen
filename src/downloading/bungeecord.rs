@@ -19,7 +19,7 @@ use crate::{
 /// Downloads the latest BungeeCord jar to a given path.
 pub async fn download_bungeecord(
     dir: &str,
-    config: &Config<'_>,
+    config: Option<&Config<'_>>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(dir);
     // Note: consider adding error messages.
@@ -67,10 +67,12 @@ pub async fn download_bungeecord(
         // Setting the length to 1200 by default for now until I can figure out how
         // to get the length of the byte stream (jar_stream) without having it be consumed or have it's ownership taken.
         let bar = ProgressBar::new(1200);
+        bar.enable_steady_tick(100);
         bar.set_style(
             ProgressStyle::default_bar()
-                .template("[{bytes_per_sec}] {bar:50.green/blue} {pos:>6}/?")
-                .progress_chars("█▒-"),
+                .template("[{bytes_per_sec}] {bar:50.green/blue} {spinner}")
+                .progress_chars("█▒-")
+                .tick_strings(&["◜", "◠", "◝", "◞", "◡", "◟"]),
         );
 
         while let Some(item) = jar_stream.next().await {
@@ -87,18 +89,19 @@ pub async fn download_bungeecord(
         build: {}"#,
                 json_data.build.as_ref().unwrap()
             ),
-        )
-        .await?;
+        )?;
 
-        if let Some(data) = &config.config {
-            let plugins = data
-                .default_plugins
-                .as_ref()
-                .unwrap()
-                .bungeecord_plugins
-                .as_ref()
-                .unwrap();
-            download_plugins(bungeecord_path.clone().as_path(), plugins).await?;
+        if let Some(conf) = &config {
+            if let Some(data) = &conf.config {
+                let plugins = data
+                    .default_plugins
+                    .as_ref()
+                    .unwrap()
+                    .bungeecord_plugins
+                    .as_ref()
+                    .unwrap();
+                download_plugins(bungeecord_path.clone().as_path(), plugins).await?;
+            }
         }
 
         Ok(())

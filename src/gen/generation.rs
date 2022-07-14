@@ -21,7 +21,7 @@ pub async fn generate_server(
     config: &Config<'_>,
 ) {
     if using_bungeecord {
-        download_bungeecord(dir, config)
+        download_bungeecord(dir, Some(config))
             .await
             .unwrap_or_else(|err| {
                 eprintln!("{} {}", "Error downloading BungeeCord!".red(), err);
@@ -38,7 +38,7 @@ pub async fn generate_server(
         });
     }
 
-    download_paper(dir, using_bungeecord, config)
+    download_paper(dir, using_bungeecord, Some(config))
         .await
         .unwrap_or_else(|err| {
             eprintln!("{} {}", "Error downloading Paper!".red(), err);

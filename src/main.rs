@@ -21,7 +21,9 @@ async fn main() {
 
     let config_path = format!("{}\\mcgen", config_dir().unwrap().display());
     let mut config = Config::new(Path::new(&config_path));
-    config.init_config().expect("Error initiating config!");
+    config
+        .init_config()
+        .expect(&format!("{}", "Error initiating config!".red()));
 
     match cli.commands {
         Commands::Gen {
@@ -35,12 +37,19 @@ async fn main() {
 
             generate_server(&dir, bungeecord, aikars_flags, &config).await;
         }
-        Commands::Update { directories, check } => match update(directories, check).await {
-            Ok(_) => (),
-            Err(err) => eprintln!("Error updating server and/or plugins! Error: {}", err),
-        },
+        Commands::Update { directories, check } => {
+            update(directories, check).await.unwrap_or_else(|err| {
+                eprintln!(
+                    "{} {}",
+                    "Error updating server and/or plugins! Error:".red(),
+                    err
+                )
+            })
+        }
         Commands::Config {} => {
-            config.open_config().expect("Error opening config!");
+            config.open_config().unwrap_or_else(|err| {
+                eprintln!("{} {}", "Error opening config! Error:".red(), err)
+            });
         }
     }
 }
