@@ -60,5 +60,5 @@ mcgen gen myserver -b -a
 
 ##### Example
 ```
-mcgen gen myserver -b -a
+mcgen update myserver, bungeecord
 ```
