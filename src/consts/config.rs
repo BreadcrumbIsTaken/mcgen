@@ -2,7 +2,8 @@ pub const DEFAULT_CONFIG_STRING: &str = r#"# These plugins will be installed whe
 default_plugins:
     paper_plugins:
         # Name of the plugin: Link to API (Only works for Jenkins's JSON API)
-        - Denizen: https://ci.citizensnpcs.co/job/Denizen/lastStableBuild/api/json
+        # Example:
+        #- Denizen: https://ci.citizensnpcs.co/job/Denizen/lastStableBuild/api/json
     bungeecord_plugins:
-        - DepenizenBungee: https://ci.citizensnpcs.co/job/DepenizenBungee/lastStableBuild/api/json
+        #- DepenizenBungee: https://ci.citizensnpcs.co/job/DepenizenBungee/lastStableBuild/api/json
 "#;
