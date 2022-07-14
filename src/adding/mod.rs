@@ -1,4 +1,4 @@
-use std::{path::Path, collections::HashMap};
+use std::{collections::HashMap, path::Path};
 
 use crate::downloading::plugins::download_plugin;
 

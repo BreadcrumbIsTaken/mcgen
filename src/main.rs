@@ -51,7 +51,11 @@ async fn main() {
                 )
             })
         }
-        Commands::Add { directory, name, url } => {
+        Commands::Add {
+            directory,
+            name,
+            url,
+        } => {
             add_plugin_to_existing_server(directory, name, url)
                 .await
                 .unwrap_or_else(|err| eprintln!("{} {}", "Error adding plugin! Error:".red(), err));

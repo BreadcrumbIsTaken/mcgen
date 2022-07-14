@@ -62,8 +62,13 @@ pub async fn add_plugin_to_version_file(
                         url: url.to_string(),
                     };
                     match new_contents.plugins {
-                        Some(ref mut plugins) => plugins.push(HashMap::from([(name.to_owned(), data)])),
-                        None => new_contents.plugins = Some(vec![HashMap::from([(name.to_owned(), data)])])
+                        Some(ref mut plugins) => {
+                            plugins.push(HashMap::from([(name.to_owned(), data)]))
+                        }
+                        None => {
+                            new_contents.plugins =
+                                Some(vec![HashMap::from([(name.to_owned(), data)])])
+                        }
                     }
                 }
             }
