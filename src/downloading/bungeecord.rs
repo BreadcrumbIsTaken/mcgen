@@ -98,9 +98,10 @@ pub async fn download_bungeecord(
                     .as_ref()
                     .unwrap()
                     .bungeecord_plugins
-                    .as_ref()
-                    .unwrap();
-                download_plugins(bungeecord_path.clone().as_path(), plugins).await?;
+                    .as_ref();
+                if let Some(plugins_list) = plugins {
+                    download_plugins(bungeecord_path.clone().as_path(), plugins_list).await?;
+                }
             }
         }
 
