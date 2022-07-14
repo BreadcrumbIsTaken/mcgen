@@ -23,7 +23,7 @@ pub async fn update_server(
         let url: &str;
         let updating_paper: bool;
 
-        if name == "BungeeCord" {
+        if name.to_lowercase() == "bungeecord" {
             url = BUNGEECORD_JSON_API_URL;
             updating_paper = false;
         } else {
