@@ -54,6 +54,17 @@ pub async fn add_plugin_to_version_file(
                             }
                         }
                     }
+                // Not in mcgen file; plugin is being added.
+                } else {
+                    let data = PluginVersionDetails {
+                        build,
+                        file_name: Some(file_name.clone()),
+                        url: url.to_string(),
+                    };
+                    match new_contents.plugins {
+                        Some(ref mut plugins) => plugins.push(HashMap::from([(name.to_owned(), data)])),
+                        None => new_contents.plugins = Some(vec![HashMap::from([(name.to_owned(), data)])])
+                    }
                 }
             }
         }

@@ -20,7 +20,7 @@ pub async fn download_plugin(
 
     create_dir_all(plugins_folder).await?;
 
-    for (name, url) in plugin.iter() {
+    for (name, url) in plugin {
         let client = Client::builder().build()?;
         let res = client
             .get(format!("{}/lastStableBuild/api/json", url))

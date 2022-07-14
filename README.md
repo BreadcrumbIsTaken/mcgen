@@ -40,7 +40,6 @@ No flags avaliable.
 
 - More accurate progress bars. 
 - `update` command to update BungeeCord, Paper, or plugins.
-- `add` command to add BungeeCord, Paper, or any other plugins to already generated server.
 
 ###### License:
 

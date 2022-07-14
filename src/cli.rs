@@ -36,6 +36,20 @@ pub enum Commands {
         #[clap(long, short, value_parser)]
         check: bool,
     },
+    /// Add additional plugins to an already existing server.
+    Add {
+        /// The directory to add the plugin to.
+        #[clap(value_parser)]
+        directory: String,
+
+        /// Name of the plugin.
+        #[clap(value_parser)]
+        name: String,
+
+        /// URL to download plugin. MUST HAVE A JENKINS API!
+        #[clap(value_parser)]
+        url: String,
+    },
     /// Opens the config in your computer's default text editor.
     Config {},
 }

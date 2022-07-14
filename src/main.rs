@@ -1,5 +1,6 @@
 //! # mcgen
 //! ## Generate a Minecraft server in seconds!
+mod adding;
 mod cli;
 mod config;
 mod consts;
@@ -13,7 +14,10 @@ use colored::*;
 use dirs::config_dir;
 use std::path::Path;
 
-use crate::{config::Config, gen::generation::generate_server, updating::update};
+use crate::{
+    adding::add_plugin_to_existing_server, config::Config, gen::generation::generate_server,
+    updating::update,
+};
 
 #[tokio::main]
 async fn main() {
@@ -46,6 +50,11 @@ async fn main() {
                     err
                 )
             })
+        }
+        Commands::Add { directory, name, url } => {
+            add_plugin_to_existing_server(directory, name, url)
+                .await
+                .unwrap_or_else(|err| eprintln!("{} {}", "Error adding plugin! Error:".red(), err));
         }
         Commands::Config {} => {
             config.open_config().unwrap_or_else(|err| {
