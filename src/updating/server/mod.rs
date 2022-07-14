@@ -21,14 +21,14 @@ pub async fn update_server(
 ) -> Result<(), Box<dyn std::error::Error>> {
     for (name, mcgen_file_data) in server {
         let url: &str;
-        let paper: bool;
+        let updating_paper: bool;
 
         if name == "BungeeCord" {
             url = BUNGEECORD_JSON_API_URL;
-            paper = false;
+            updating_paper = false;
         } else {
             url = PAPER_JSON_API_URL;
-            paper = true;
+            updating_paper = true;
         }
 
         let client = Client::builder().build()?;
@@ -41,7 +41,7 @@ pub async fn update_server(
         let build_outdated: bool;
         let builds_behind: u32;
 
-        if !paper {
+        if !updating_paper {
             // BungeeCord does not use versions like Paper so it will always be false.
             if mcgen_file_data.build != receiving_version_data.build.unwrap() {
                 version_outdated = false;
