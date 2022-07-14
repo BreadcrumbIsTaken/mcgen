@@ -5,6 +5,7 @@ edition = "2021"
 authors = ["Breadcrumb"]
 description = "Generate a Minecraft server in seconds!"
 repository = "https://github.com/BreadcrumbIsTaken/mcgen"
+homepage = "https://github.com/BreadcrumbIsTaken/mcgen"
 license = "MIT"
 keywords = ["cli", "server", "mc", "generate", "gen"]
 categories = ["command-line-utilities"]
