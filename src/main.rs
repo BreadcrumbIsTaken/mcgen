@@ -21,9 +21,10 @@ async fn main() {
 
     let config_path = format!("{}\\mcgen", config_dir().unwrap().display());
     let mut config = Config::new(Path::new(&config_path));
-    config
-        .init_config()
-        .expect(&format!("{}", "Error initiating config!".red()));
+    config.init_config().unwrap_or_else(|err| {
+        eprintln!("{} {}", "Error initiating config! Error:".red(), err);
+        std::process::exit(1);
+    });
 
     match cli.commands {
         Commands::Gen {
