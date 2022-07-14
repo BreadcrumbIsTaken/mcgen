@@ -11,13 +11,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::consts::config::DEFAULT_CONFIG_STRING;
 
-/// Holds data on the config file.
-pub struct Config<'a> {
-    path: &'a Path,
-    exists: bool,
-    pub config: Option<ConfigData>,
-}
-
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ConfigData {
     pub default_plugins: Option<DefaultPlugins>,
@@ -27,6 +20,13 @@ pub struct ConfigData {
 pub struct DefaultPlugins {
     pub paper_plugins: Option<Vec<HashMap<String, String>>>,
     pub bungeecord_plugins: Option<Vec<HashMap<String, String>>>,
+}
+
+/// Holds data on the config file.
+pub struct Config<'a> {
+    path: &'a Path,
+    exists: bool,
+    pub config: Option<ConfigData>,
 }
 
 impl<'a> Config<'a> {
@@ -56,12 +56,6 @@ impl<'a> Config<'a> {
     }
 
     pub fn open_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        // edit_file(self.path).expect(&format!(
-        //     "{} {}",
-        //     "Cannot open config file. You can open it yourself here:".red(),
-        //     self.path.display()
-        // ));
-
         edit_file(self.path).unwrap_or_else(|err| {
             eprintln!(
                 "{} {} {}",
