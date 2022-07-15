@@ -23,6 +23,11 @@ mcgen add myserver Denizen https://ci.citizensnpcs.co/job/Denizen
 
 ### `config`
 
+##### Flags
+|flags|description|example usage|long name|
+| :-: |    :-:    |     :-:     |   :-:   |
+|-r   |Will delete the contents of the current config and create a new one with the default values and then open it.|`mcgen config -r`|--regenerate|
+
 ##### Example
 ```
 mcgen config

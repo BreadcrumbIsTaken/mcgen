@@ -60,8 +60,8 @@ async fn main() {
                 .await
                 .unwrap_or_else(|err| eprintln!("{} {}", "Error adding plugin! Error:".red(), err));
         }
-        Commands::Config {} => {
-            config.open_config().unwrap_or_else(|err| {
+        Commands::Config { regenerate } => {
+            config.open_config(regenerate).unwrap_or_else(|err| {
                 eprintln!("{} {}", "Error opening config! Error:".red(), err)
             });
         }

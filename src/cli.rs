@@ -51,5 +51,9 @@ pub enum Commands {
         url: String,
     },
     /// Opens the config in your computer's default text editor.
-    Config {},
+    Config {
+        /// Will delete the contents of the current config and create a new one with the default values and then open it.
+        #[clap(long, short, value_parser)]
+        regenerate: bool,
+    },
 }

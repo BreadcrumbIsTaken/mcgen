@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    fs::{create_dir_all, File},
+    fs::{create_dir_all, File, remove_file},
     io::{Read, Write},
     path::Path,
 };
@@ -55,7 +55,12 @@ impl<'a> Config<'a> {
         Ok(())
     }
 
-    pub fn open_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn open_config(&mut self, regenerate: bool) -> Result<(), Box<dyn std::error::Error>> {
+        if regenerate {
+            remove_file(self.path.join("config.yml"))?;
+            println!("{}", "Config has been regenerated! Opening. . .".green());
+            self.create_config()?;
+        }
         edit_file(self.path).unwrap_or_else(|err| {
             eprintln!(
                 "{} {} {}",
