@@ -38,7 +38,7 @@ mcgen config
 ##### Arguments
 |argument|description|example|
 |   :-:  |    :-:    |  :-:  |
-|DIR|The name of the directory to place contents of the Minecraft server|
+|DIR|The name of the directory to place contents of the Minecraft server|`mcgen gen myserver`|
 
 ##### Flags
 |flags|description|example usage|long name|
