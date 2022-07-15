@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand, Args};
 
 #[derive(Parser)]
-#[clap(name = "mcgen", author = "Breadcrumb", version = "0.1.0", about = "Generate a barebones Minecraft server in seconds!", long_about = None)]
+#[clap(author, version, about, long_about = None)]
 pub struct Cli {
     #[clap(subcommand)]
     pub commands: Commands,
