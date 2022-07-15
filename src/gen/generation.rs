@@ -19,6 +19,7 @@ pub async fn generate_server(
     using_bungeecord: bool,
     aikars_flags: bool,
     config: &Config<'_>,
+    accept_eula: bool,
 ) {
     if using_bungeecord {
         download_bungeecord(dir, Some(config))
@@ -38,7 +39,7 @@ pub async fn generate_server(
         });
     }
 
-    download_paper(dir, using_bungeecord, Some(config))
+    download_paper(dir, using_bungeecord, Some(config), accept_eula)
         .await
         .unwrap_or_else(|err| {
             eprintln!("{} {}", "Error downloading Paper!".red(), err);

@@ -13,7 +13,7 @@ use crate::{
     config::Config,
     consts::urls::PAPER_JSON_API_URL,
     downloading::{plugins::download_plugins, BuildData},
-    gen::version_file::generate_version_file,
+    gen::{eula::generate_eula, version_file::generate_version_file},
 };
 
 /// Downloads the latest Paper version.
@@ -21,6 +21,7 @@ pub async fn download_paper(
     dir: &str,
     using_bungeecord: bool,
     config: Option<&Config<'_>>,
+    accept_eula: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(dir);
     let paper_path = if using_bungeecord {
@@ -136,6 +137,13 @@ pub async fn download_paper(
                 latest_build
             ),
         )?;
+
+        if accept_eula {
+            generate_eula(&paper_path.display().to_string()).unwrap_or_else(|err| {
+                eprintln!("{} {}", "Error generating EULA! Error:".red(), err);
+                std::process::exit(1);
+            });
+        }
     }
 
     Ok(())

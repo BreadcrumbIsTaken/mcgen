@@ -35,12 +35,13 @@ async fn main() {
             dir,
             bungeecord,
             aikars_flags,
+            accept_eula,
         } => {
             // yeah i think this looks funny too but it lets the terminal use colors :D
             println!("{} {}/", "Creating a new server in directory:".green(), dir);
             println!("---");
 
-            generate_server(&dir, bungeecord, aikars_flags, &config).await;
+            generate_server(&dir, bungeecord, aikars_flags, &config, accept_eula).await;
         }
         Commands::Update { directories, check } => {
             update(directories, check).await.unwrap_or_else(|err| {

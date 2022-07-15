@@ -19,9 +19,18 @@ pub enum Commands {
         #[clap(long, short, value_parser)]
         bungeecord: bool,
 
-        /// Choose whether or not to use Aikar's Flags (reference: <https://aikar.co/mcflags.html>)
+        /// Choose whether or not to use Aikar's Flags (https://aikar.co/mcflags.html)
         #[clap(long, short, value_parser)]
         aikars_flags: bool,
+
+        /// Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the EULA: https://aka.ms/MinecraftEULA
+        #[clap(
+            long,
+            short = 'e',
+            value_parser,
+            verbatim_doc_comment
+        )]
+        accept_eula: bool,
     },
     /// Updates plugins or server/bungeecord versions.
     #[clap(
