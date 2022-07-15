@@ -1,10 +1,10 @@
-# mcgen
+# mcgen 🟩
 
-## Generate a Minecraft server in seconds!
+## Generate a Minecraft server in seconds! ⌚
 
 Generates a server with [Paper](https://papermc.io) and optionally [BungeeCord](https://www.spigotmc.org/threads/1-8-1-15-bungeecord.392/). This tool will auto generate a simple start script (start.sh/start.bat depending on what OS you use) or one with [Aikar's Flags](https://aikar.co/mcflags.html).
 
-## How to use!
+## How to use! 🧪
 
 Simply install it using:
 
@@ -18,11 +18,21 @@ then you just have to use a super easy command:
 mcgen gen your_servers_name_here
 ```
 
-## Documentation
+## What can it do? 🤔
+
+I'm glad you asked.
+
+- Downloads the latest versions of Paper and BungeeCord
+- Creates a start script to start your server
+- Download default plugins chosen by YOU whenever you generate a new server using `mcgen gen`!
+- Add plugins to your project with a single command!
+- Update Paper, BungeeCord, and your plugins all at the same time!
+
+## Documentation 📃
 
 See it [here](https://github.com/BreadcrumbIsTaken/mcgen/blob/main/DOCS.md).
 
-###### License:
+###### License ⚖️
 
     MIT License
 
