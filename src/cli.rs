@@ -31,6 +31,10 @@ pub enum Commands {
             verbatim_doc_comment
         )]
         accept_eula: bool,
+
+        /// By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.
+        #[clap(long = "no-start-scripts", short = 'n', value_parser, verbatim_doc_comment)]
+        dont_generate_start_scripts: bool,
     },
     /// Updates plugins or server/bungeecord versions.
     #[clap(

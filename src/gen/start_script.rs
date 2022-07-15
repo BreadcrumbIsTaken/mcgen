@@ -17,12 +17,21 @@ use colored::*;
 pub fn generate_start_script_bungeecord(dir: &str) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(&dir).join("bungeecord");
 
-    #[cfg(all(target_os = "linux", target_os = "macos"))]
-    let file_path = path.join("start.sh");
-    #[cfg(target_os = "windows")]
-    let file_path = path.join("start.bat");
+    let file_paths = vec![path.join("start.sh"), path.join("start.bat")];
+    let mut exists = false;
 
-    if file_path.exists() {
+    for file_path in file_paths {
+        if file_path.exists() {
+            exists = true;
+        } else {
+            exists = false;
+            let mut start_script = File::create(file_path)?;
+    
+            start_script.write_all(BUNGEECORD_START_SCRIPT.as_bytes())?;
+        }
+    }
+
+    if exists {
         Err(Box::new(Error::new(
             std::io::ErrorKind::AlreadyExists,
             format!(
@@ -31,14 +40,6 @@ pub fn generate_start_script_bungeecord(dir: &str) -> Result<(), Box<dyn std::er
             ),
         )))
     } else {
-        let mut start_script = File::create(file_path)?;
-
-        start_script.write_all(BUNGEECORD_START_SCRIPT.as_bytes())?;
-
-        // println!(
-        //     "{}",
-        //     "Successfully generated BungeeCord start script!".green()
-        // );
         Ok(())
     }
 }
@@ -59,12 +60,24 @@ pub fn generate_start_script_paper(
         path.to_path_buf()
     };
 
-    #[cfg(all(target_os = "linux", target_os = "macos"))]
-    let file_path = path.join("start.sh");
-    #[cfg(target_os = "windows")]
-    let file_path = path.join("start.bat");
+    let file_paths = vec![path.join("start.sh"), path.join("start.bat")];
+    let mut exists = false;
 
-    if file_path.exists() {
+    for file_path in file_paths {
+        if file_path.exists() {
+            exists = true;
+        } else {
+            exists = false;
+            let mut start_script = File::create(file_path)?;
+            if aikars_flags {
+                start_script.write_all(AIKARS_FLAGS_PAPER_START_SCRIPT.as_bytes())?;
+            } else {
+                start_script.write_all(REGULAR_PAPER_START_SCRIPT.as_bytes())?;
+            }
+        }
+    }
+
+    if exists {
         Err(Box::new(Error::new(
             std::io::ErrorKind::AlreadyExists,
             format!(
@@ -73,15 +86,6 @@ pub fn generate_start_script_paper(
             ),
         )))
     } else {
-        let mut start_script = File::create(file_path)?;
-        if aikars_flags {
-            start_script.write_all(AIKARS_FLAGS_PAPER_START_SCRIPT.as_bytes())?;
-        } else {
-            start_script.write_all(REGULAR_PAPER_START_SCRIPT.as_bytes())?;
-        }
-
-        // println!("{}", "Successfully generated Paper start script!".green());
-
         Ok(())
     }
 }

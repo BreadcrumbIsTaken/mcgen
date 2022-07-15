@@ -20,6 +20,7 @@ pub async fn generate_server(
     aikars_flags: bool,
     config: &Config<'_>,
     accept_eula: bool,
+    dont_generate_start_scripts: bool,
 ) {
     if using_bungeecord {
         download_bungeecord(dir, Some(config))
@@ -29,14 +30,16 @@ pub async fn generate_server(
                 std::process::exit(1);
             });
 
-        generate_start_script_bungeecord(dir).unwrap_or_else(|err| {
-            eprintln!(
-                "{} {}",
-                "Error generating BungeeCord start script!".red(),
-                err
-            );
-            std::process::exit(1);
-        });
+        if !dont_generate_start_scripts {
+            generate_start_script_bungeecord(dir).unwrap_or_else(|err| {
+                eprintln!(
+                    "{} {}",
+                    "Error generating BungeeCord start script!".red(),
+                    err
+                );
+                std::process::exit(1);
+            });
+        }
     }
 
     download_paper(dir, using_bungeecord, Some(config), accept_eula)
@@ -46,8 +49,10 @@ pub async fn generate_server(
             std::process::exit(1);
         });
 
-    generate_start_script_paper(dir, aikars_flags, using_bungeecord).unwrap_or_else(|err| {
-        eprintln!("{} {}", "Error generating Paper start script!".red(), err);
-        std::process::exit(1);
-    });
+    if !dont_generate_start_scripts {
+        generate_start_script_paper(dir, aikars_flags, using_bungeecord).unwrap_or_else(|err| {
+            eprintln!("{} {}", "Error generating Paper start script!".red(), err);
+            std::process::exit(1);
+        });
+    }
 }

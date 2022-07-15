@@ -46,6 +46,7 @@ mcgen config
 |-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html).|`mcgen gen myserver -a`|--aikars-flags|
 |-b   |Choose whether or not to have a BungeeCord network.|`mcgen gen myserver -b`|--bungeecord|
 |-e   |Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the [EULA](https://aka.ms/MinecraftEULA)|`mcgen gen myserver -e`|--accept-eula|
+|-n   |By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.|`mcgen gen myserver -n`|--no-start-scripts|
 
 ##### Example
 ```

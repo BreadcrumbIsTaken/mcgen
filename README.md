@@ -2,7 +2,7 @@
 
 ## Generate a Minecraft server in seconds! ⌚
 
-Generates a server with [Paper](https://papermc.io) and optionally [BungeeCord](https://www.spigotmc.org/threads/1-8-1-15-bungeecord.392/). This tool will auto generate a simple start script (start.sh/start.bat depending on what OS you use) or one with [Aikar's Flags](https://aikar.co/mcflags.html).
+Generates a server with [Paper](https://papermc.io) and optionally [BungeeCord](https://www.spigotmc.org/threads/1-8-1-15-bungeecord.392/). This tool will auto generate a simple start script, or one with [Aikar's Flags](https://aikar.co/mcflags.html).
 
 ## How to use! 🧪
 
