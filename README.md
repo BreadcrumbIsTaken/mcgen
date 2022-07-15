@@ -25,7 +25,7 @@ I'm glad you asked.
 - Downloads the latest versions of [Paper](https://papermc.io) and [BungeeCord](https://www.spigotmc.org/threads/1-8-1-15-bungeecord.392)
 - Creates a start script to start your server
 - Download default plugins chosen by YOU whenever you generate a new server using `mcgen gen`!
-- Add plugins to your project with a single command!
+- Add plugins, start scripts, Paper, and BungeeCord to your project with a single command!
 - Update Paper, BungeeCord, and your plugins all at the same time!
 - Automatically accept the [EULA](https://aka.ms/MinecraftEULA)!
 

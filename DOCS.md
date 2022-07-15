@@ -9,17 +9,76 @@
 
 ### `add`
 
-##### Arguments
+#### Subcommands
+|subcommand|description|
+|   :-:    |    :-:    |
+|[bungeecord](https://github.com/BreadcrumbIsTaken/mcgen/blob/main/DOCS.md#bungeecord)|Add a BungeeCord server.|
+|[paper](https://github.com/BreadcrumbIsTaken/mcgen/blob/main/DOCS.md#paper)|Add a Paper server.|
+|[plugin](https://github.com/BreadcrumbIsTaken/mcgen/blob/main/DOCS.md#plugin)|Add a plugin. Must have a Jenkins API|
+|[startfile](https://github.com/BreadcrumbIsTaken/mcgen/blob/main/DOCS.md#start-file)|Add a start file.|
+
+##### `bungeecord`
+
+###### Arguments
 |argument|description|example|
 |   :-:  |    :-:    |  :-:  |
-|DIRECTORY|The directory to add the plugin to|myserver|
-|NAME|Name of the plugin|Denizen|
-|URL|Url to download the plugin. MUST HAVE A JENKINS API! Leave out the trailing slash.|https://ci.citizensnpcs.co/job/Denizen|
+|DIRECTORY|The directory to add BungeeCord to.|myserver|
 
-##### Example
+###### Flags
+|flags|description|example usage|long name|
+| :-: |    :-:    |     :-:     |   :-:   |
+|-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html)|`mcgen add bungeecord -a`|--aikars-flags|
+|-n   |By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.|`mcgen gen myserver -n`|--no-start-scripts|
+
+###### Example
 ```
-mcgen add myserver Denizen https://ci.citizensnpcs.co/job/Denizen
+mcgen add bungeecord . -a
 ```
+
+##### `paper`
+
+###### Arguments
+|argument|description|example|
+|   :-:  |    :-:    |  :-:  |
+|DIR|The directory to add Paper to|`mcgen add paper myserver`|
+
+###### Flags
+|flags|description|example usage|long name|
+| :-: |    :-:    |     :-:     |   :-:   |
+|-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html).|`mcgen gen myserver -a`|--aikars-flags|
+|-e   |Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the [EULA](https://aka.ms/MinecraftEULA)|`mcgen gen myserver -e`|--accept-eula|
+|-n   |By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.|`mcgen gen myserver -n`|--no-start-scripts|
+
+###### Example
+```
+mcgen add paper . -n -e
+```
+
+##### `plugin`
+
+###### Arguments
+|argument|description|example|
+|   :-:  |    :-:    |  :-:  |
+|DIRECTORY|The directory to add the plugin to.|`mcgen add plugin myserver`|
+|NAME|Name of the plugin.|`mcgen add plugin myserver Denizen`|
+|URL|URL to download plugin. MUST HAVE A JENKINS API!|`mcgen add plugin myserver Denizen https://ci.citizensnpcs.co/job/Denizen`|
+
+###### Example
+```
+mcgen add plugin myserver Denizen https://ci.citizensnpcs.co/job/Denizen
+```
+
+##### `startfile`
+
+###### Arguments
+|argument|description|example|
+|   :-:  |    :-:    |  :-:  |
+|DIRECTORY|The directory to add the start files to.|`mcgen add plugin myserver`|
+
+##### Flags
+|flags|description|example usage|long name|
+| :-: |    :-:    |     :-:     |   :-:   |
+|-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html).|`mcgen gen myserver -a`|--aikars-flags|
 
 ### `config`
 
