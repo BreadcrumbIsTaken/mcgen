@@ -27,7 +27,6 @@ I'm glad you asked.
 - Download default plugins chosen by YOU whenever you generate a new server using `mcgen gen`!
 - Add plugins, start scripts, Paper, and BungeeCord to your project with a single command!
 - Update Paper, BungeeCord, and your plugins all at the same time!
-- Automatically accept the [EULA](https://aka.ms/MinecraftEULA)!
 
 ## Documentation 📃
 
