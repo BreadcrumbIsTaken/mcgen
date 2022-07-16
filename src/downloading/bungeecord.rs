@@ -19,14 +19,15 @@ use crate::{
 /// Downloads the latest BungeeCord jar to a given path.
 pub async fn download_bungeecord(
     dir: &str,
+    overwrite: bool,
     config: Option<&Config<'_>>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(dir);
     // Note: consider adding error messages.
-    if path.exists() {
+    if (path.join("BungeeCord.jar").exists() || path.join("bungeecord/BungeeCord.jar").exists()) && !overwrite {
         Err(Box::new(Error::new(
             std::io::ErrorKind::AlreadyExists,
-            format!("The directory, '{}', already exists!", path.display()),
+            format!("BungeeCord already exists in directory, '{}'.", path.display()),
         )))
     } else {
         let bungeecord_path = path.join("bungeecord");
@@ -100,7 +101,7 @@ pub async fn download_bungeecord(
                     .bungeecord_plugins
                     .as_ref();
                 if let Some(plugins_list) = plugins {
-                    download_plugins(bungeecord_path.clone().as_path(), plugins_list).await?;
+                    download_plugins(bungeecord_path.clone().as_path(), plugins_list, overwrite).await?;
                 }
             }
         }

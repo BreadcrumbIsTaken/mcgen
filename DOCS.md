@@ -27,8 +27,9 @@
 ###### Flags
 |flags|description|example usage|long name|
 | :-: |    :-:    |     :-:     |   :-:   |
-|-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html)|`mcgen add bungeecord -a`|--aikars-flags|
-|-n   |By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.|`mcgen gen myserver -n`|--no-start-scripts|
+|-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html)|`mcgen add bungeecord myserver -a`|--aikars-flags|
+|-n   |By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.|`mcgen add bungeecord myserver -n`|--no-start-scripts|
+|-o   |If BungeeCord or any other generated files already exist, overwrite them instead of throwing an error.|`mcgen add bungeecord myserver -o`|--overwrite|
 
 ###### Example
 ```
@@ -45,9 +46,10 @@ mcgen add bungeecord . -a
 ###### Flags
 |flags|description|example usage|long name|
 | :-: |    :-:    |     :-:     |   :-:   |
-|-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html).|`mcgen gen myserver -a`|--aikars-flags|
-|-e   |Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the [EULA](https://aka.ms/MinecraftEULA)|`mcgen gen myserver -e`|--accept-eula|
-|-n   |By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.|`mcgen gen myserver -n`|--no-start-scripts|
+|-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html).|`mcgen add paper myserver -a`|--aikars-flags|
+|-e   |Accept to Minecraft's EULA. Wilmcgen add paper myservermcgen gen myserver -e`|--accept-eula|
+|-n   |By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.|`mcgen add paper myserver -n`|--no-start-scripts|
+|-o   |If Paper or any other generated files already exist, overwrite them instead of throwing an error.|`mcgen add paper myserver -o`|--overwrite|
 
 ###### Example
 ```
@@ -62,6 +64,11 @@ mcgen add paper . -n -e
 |DIRECTORY|The directory to add the plugin to.|`mcgen add plugin myserver`|
 |NAME|Name of the plugin.|`mcgen add plugin myserver Denizen`|
 |URL|URL to download plugin. MUST HAVE A JENKINS API!|`mcgen add plugin myserver Denizen https://ci.citizensnpcs.co/job/Denizen`|
+
+##### Flags
+|flags|description|example usage|long name|
+| :-: |    :-:    |     :-:     |   :-:   |
+|-o   |If the plugin already exists, overwrite them instead of throwing an error|`mcgen add plugin myserver Denizen https://ci.citizensnpcs.co/job/Denizen -o`|--overwrite|
 
 ###### Example
 ```
@@ -78,7 +85,8 @@ mcgen add plugin myserver Denizen https://ci.citizensnpcs.co/job/Denizen
 ##### Flags
 |flags|description|example usage|long name|
 | :-: |    :-:    |     :-:     |   :-:   |
-|-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html).|`mcgen gen myserver -a`|--aikars-flags|
+|-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html).|`mcgen add startfile myserver -a`|--aikars-flags|
+|-o   |If the start files already exist, overwrite them instead of throwing an error.|`mcgen add startfile myserver -o`|--overwrite|
 
 ### `config`
 

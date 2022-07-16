@@ -8,38 +8,38 @@ use crate::consts::scripts::{
     AIKARS_FLAGS_PAPER_START_SCRIPT, BUNGEECORD_START_SCRIPT, REGULAR_PAPER_START_SCRIPT,
 };
 
-use colored::*;
-
 /// Generates a basic start script for BungeeCord.
 ///
 /// The script's file extension will be different based on which operating system you use.
 /// The RAM given is defaulted to 1 gigabyte. Feel free to change this as you please.
-pub fn generate_start_script_bungeecord(dir: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub fn generate_start_script_bungeecord(dir: &str, overwrite: bool) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(&dir).join("bungeecord");
 
     let file_paths = vec![path.join("start.sh"), path.join("start.bat")];
     let mut exists = false;
 
-    for file_path in file_paths {
+    for file_path in file_paths.clone() {
         if file_path.exists() {
             exists = true;
         } else {
             exists = false;
-            let mut start_script = File::create(file_path)?;
-    
-            start_script.write_all(BUNGEECORD_START_SCRIPT.as_bytes())?;
         }
     }
 
-    if exists {
+    if exists && !overwrite {
         Err(Box::new(Error::new(
             std::io::ErrorKind::AlreadyExists,
             format!(
-                "The directory, '{}', already exists!",
-                path.display().to_string().cyan()
+                "Start files already exists in directory {}!",
+                path.display()
             ),
         )))
     } else {
+        for file_path in file_paths {
+            let mut start_script = File::create(file_path)?;
+
+            start_script.write_all(BUNGEECORD_START_SCRIPT.as_bytes())?;
+        }
         Ok(())
     }
 }
@@ -52,6 +52,7 @@ pub fn generate_start_script_paper(
     dir: &str,
     aikars_flags: bool,
     using_bungeecord: bool,
+    overwrite: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(dir);
     let path = if using_bungeecord {
@@ -63,11 +64,24 @@ pub fn generate_start_script_paper(
     let file_paths = vec![path.join("start.sh"), path.join("start.bat")];
     let mut exists = false;
 
-    for file_path in file_paths {
+    for file_path in file_paths.clone() {
         if file_path.exists() {
             exists = true;
         } else {
             exists = false;
+        }
+    }
+
+    if exists && !overwrite {
+        Err(Box::new(Error::new(
+            std::io::ErrorKind::AlreadyExists,
+            format!(
+                "The directory, '{}', already exists!",
+                path.display()
+            ),
+        )))
+    } else {
+        for file_path in file_paths {
             let mut start_script = File::create(file_path)?;
             if aikars_flags {
                 start_script.write_all(AIKARS_FLAGS_PAPER_START_SCRIPT.as_bytes())?;
@@ -75,17 +89,6 @@ pub fn generate_start_script_paper(
                 start_script.write_all(REGULAR_PAPER_START_SCRIPT.as_bytes())?;
             }
         }
-    }
-
-    if exists {
-        Err(Box::new(Error::new(
-            std::io::ErrorKind::AlreadyExists,
-            format!(
-                "The directory, '{}', already exists!",
-                path.display().to_string().cyan()
-            ),
-        )))
-    } else {
         Ok(())
     }
 }

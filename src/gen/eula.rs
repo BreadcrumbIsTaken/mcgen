@@ -7,7 +7,10 @@ use std::{fs::OpenOptions, io::Write};
 use crate::consts::eula::EULA_ACKNOWLEDGMENT;
 
 pub fn generate_eula(path: &str) -> Result<(), Box<dyn std::error::Error>> {
-    println!("{}", "You have agreed to accepting Minecraft's EULA: (https://aka.ms/MinecraftEULA)".underline());
+    println!(
+        "{}",
+        "You have agreed to accepting Minecraft's EULA: (https://aka.ms/MinecraftEULA)".underline()
+    );
 
     let file = Path::new(path).join("eula.txt");
     let mut eula = OpenOptions::new().create(true).write(true).open(file)?;

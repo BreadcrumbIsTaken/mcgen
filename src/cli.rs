@@ -1,4 +1,4 @@
-use clap::{Parser, Subcommand, Args};
+use clap::{Args, Parser, Subcommand};
 
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
@@ -25,15 +25,16 @@ pub enum Commands {
         aikars_flags: bool,
 
         /// Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the EULA: https://aka.ms/MinecraftEULA
-        #[clap(
-            long = "accept-eula",
-            value_parser,
-            verbatim_doc_comment
-        )]
+        #[clap(long = "accept-eula", value_parser, verbatim_doc_comment)]
         accept_eula: bool,
 
         /// By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.
-        #[clap(long = "no-start-scripts", short = 'n', value_parser, verbatim_doc_comment)]
+        #[clap(
+            long = "no-start-scripts",
+            short = 'n',
+            value_parser,
+            verbatim_doc_comment
+        )]
         dont_generate_start_scripts: bool,
     },
     /// Updates plugins or server/bungeecord versions.
@@ -82,6 +83,10 @@ pub enum AddCommands {
         /// URL to download plugin. MUST HAVE A JENKINS API!
         #[clap(value_parser)]
         url: String,
+
+        /// If the plugin already exists, overwrite them instead of throwing an error.
+        #[clap(long, short, value_parser)]
+        overwrite: bool,
     },
     /// Add a Paper server.
     Paper {
@@ -90,11 +95,7 @@ pub enum AddCommands {
         directory: String,
 
         /// Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the EULA: https://aka.ms/MinecraftEULA
-        #[clap(
-            long = "accept-eula",
-            value_parser,
-            verbatim_doc_comment
-        )]
+        #[clap(long = "accept-eula", value_parser, verbatim_doc_comment)]
         accept_eula: bool,
 
         /// Choose whether or not to use Aikar's Flags (https://aikar.co/mcflags.html)
@@ -102,8 +103,17 @@ pub enum AddCommands {
         aikars_flags: bool,
 
         /// By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.
-        #[clap(long = "no-start-scripts", short = 'n', value_parser, verbatim_doc_comment)]
+        #[clap(
+            long = "no-start-scripts",
+            short = 'n',
+            value_parser,
+            verbatim_doc_comment
+        )]
         dont_generate_start_scripts: bool,
+
+        /// If Paper or any other generated files already exist, overwrite them instead of throwing an error.
+        #[clap(long, short, value_parser)]
+        overwrite: bool,
     },
     /// Add a BungeeCord server.
     BungeeCord {
@@ -116,8 +126,17 @@ pub enum AddCommands {
         aikars_flags: bool,
 
         /// By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.
-        #[clap(long = "no-start-scripts", short = 'n', value_parser, verbatim_doc_comment)]
+        #[clap(
+            long = "no-start-scripts",
+            short = 'n',
+            value_parser,
+            verbatim_doc_comment
+        )]
         dont_generate_start_scripts: bool,
+
+        /// If BungeeCord or any other generated files already exist, overwrite them instead of throwing an error.
+        #[clap(long, short, value_parser)]
+        overwrite: bool,
     },
     /// Add a start file.
     StartFile {
@@ -127,5 +146,9 @@ pub enum AddCommands {
         /// Choose whether or not to use Aikar's Flags (https://aikar.co/mcflags.html)
         #[clap(long = "aikars-flags", short, value_parser)]
         aikars_flags: bool,
+
+        /// If the start files already exist, overwrite them instead of throwing an error.
+        #[clap(long, short, value_parser)]
+        overwrite: bool,
     },
 }

@@ -20,8 +20,9 @@ use crate::{
 pub async fn download_paper(
     dir: &str,
     using_bungeecord: bool,
-    config: Option<&Config<'_>>,
     accept_eula: bool,
+    overwrite: bool,
+    config: Option<&Config<'_>>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(dir);
     let paper_path = if using_bungeecord {
@@ -30,7 +31,7 @@ pub async fn download_paper(
         path.to_path_buf()
     };
 
-    if paper_path.join("paper.jar").exists() {
+    if paper_path.join("paper.jar").exists() && !overwrite {
         eprintln!(
             "{} '{}' {}",
             "The directory,".red(),
@@ -121,7 +122,7 @@ pub async fn download_paper(
                     .paper_plugins
                     .as_ref();
                 if let Some(plugins_list) = plugins {
-                    download_plugins(paper_path.clone().as_path(), plugins_list).await?;
+                    download_plugins(paper_path.clone().as_path(), plugins_list, overwrite).await?;
                 }
             }
         }

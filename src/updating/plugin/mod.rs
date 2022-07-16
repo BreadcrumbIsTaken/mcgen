@@ -58,6 +58,7 @@ pub async fn update_plugin(
                 download_plugin(
                     path.parent().unwrap().parent().unwrap(),
                     &HashMap::from([(name.to_owned(), mcgen_file_data.url.to_owned())]),
+                    true
                 )
                 .await?;
             }

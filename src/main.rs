@@ -9,7 +9,7 @@ mod gen;
 mod updating;
 
 use clap::Parser;
-use cli::{Cli, Commands, AddCommands};
+use cli::{AddCommands, Cli, Commands};
 use colored::*;
 use dirs::config_dir;
 use gen::start_script::generate_start_script_paper;
@@ -40,10 +40,20 @@ async fn main() {
             dont_generate_start_scripts,
         } => {
             // yeah i think this looks funny too but it lets the terminal use colors :D
-            println!("{} {}/", "Creating a new server in directory:".green(), dir);
+            println!("{} {}", "Creating a new server in directory:".green(), dir);
             println!("---");
 
-            generate_server(&dir, bungeecord, aikars_flags, &config, accept_eula, dont_generate_start_scripts, false).await;
+            generate_server(
+                &dir,
+                bungeecord,
+                aikars_flags,
+                accept_eula,
+                dont_generate_start_scripts,
+                false,
+                false,
+                &config
+            )
+            .await;
         }
         Commands::Update { directories, check } => {
             update(directories, check).await.unwrap_or_else(|err| {
@@ -54,27 +64,72 @@ async fn main() {
                 )
             })
         }
-        Commands::Add(add) => {
-            match add.to_add {
-                AddCommands::Plugin { directory, name, url } => {
-                    add_plugin_to_existing_server(directory, name, url)
-                        .await
-                        .unwrap_or_else(|err| eprintln!("{} {}", "Error adding plugin! Error:".red(), err));        
-                },
-                AddCommands::Paper { directory, accept_eula, aikars_flags, dont_generate_start_scripts } => {
-                    generate_server(&directory, false, aikars_flags, &config, accept_eula, dont_generate_start_scripts, false).await;
-                },
-                AddCommands::BungeeCord { directory, aikars_flags, dont_generate_start_scripts } => {
-                    generate_server(&directory, true, aikars_flags, &config, false, dont_generate_start_scripts, true).await;
-                },
-                AddCommands::StartFile { directory, aikars_flags } => {
-                    generate_start_script_paper(&directory, aikars_flags, false).unwrap_or_else(|err| {
-                        eprintln!("{} {}", "Error adding start script! Error:".red(), err);
+        Commands::Add(add) => match add.to_add {
+            AddCommands::Plugin {
+                directory,
+                name,
+                url,
+                overwrite
+            } => {
+                add_plugin_to_existing_server(directory, name, url, overwrite)
+                    .await
+                    .unwrap_or_else(|err| {
+                        eprintln!("{} {}", "Error adding plugin! Error:".red(), err)
                     });
-                }
             }
-            
-        }
+            AddCommands::Paper {
+                directory,
+                accept_eula,
+                aikars_flags,
+                dont_generate_start_scripts,
+                overwrite,
+            } => {
+                println!("{} {} {} '{}'", "Adding".green(), "Paper".bold().cyan(), "to directory:".green(), directory);
+                println!("---");
+                generate_server(
+                    &directory,
+                    false,
+                    aikars_flags,
+                    accept_eula,
+                    dont_generate_start_scripts,
+                    false,
+                    overwrite,
+                    &config,
+                )
+                .await;
+            }
+            AddCommands::BungeeCord {
+                directory,
+                aikars_flags,
+                dont_generate_start_scripts,
+                overwrite,
+            } => {
+                println!("{} {} {} '{}'", "Adding".green(), "BungeeCord".bold().cyan(), "to directory:".green(), directory);
+                println!("---");
+                generate_server(
+                    &directory,
+                    true,
+                    aikars_flags,
+                    false,
+                    dont_generate_start_scripts,
+                    true,
+                    overwrite,
+                    &config,
+                )
+                .await;
+            }
+            AddCommands::StartFile {
+                directory,
+                aikars_flags,
+                overwrite,
+            } => {
+                generate_start_script_paper(&directory, aikars_flags, false, overwrite).unwrap_or_else(
+                    |err| {
+                        eprintln!("{} {}", "Error adding start script! Error:".red(), err);
+                    },
+                );
+            }
+        },
         Commands::Config { regenerate } => {
             config.open_config(regenerate).unwrap_or_else(|err| {
                 eprintln!("{} {}", "Error opening config! Error:".red(), err)
