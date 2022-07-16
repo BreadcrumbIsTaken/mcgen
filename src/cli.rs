@@ -26,8 +26,7 @@ pub enum Commands {
 
         /// Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the EULA: https://aka.ms/MinecraftEULA
         #[clap(
-            long,
-            short = 'e',
+            long = "accept-eula",
             value_parser,
             verbatim_doc_comment
         )]
@@ -92,8 +91,7 @@ pub enum AddCommands {
 
         /// Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the EULA: https://aka.ms/MinecraftEULA
         #[clap(
-            long,
-            short = 'e',
+            long = "accept-eula",
             value_parser,
             verbatim_doc_comment
         )]
