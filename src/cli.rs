@@ -114,6 +114,10 @@ pub enum AddCommands {
         /// If Paper or any other generated files already exist, overwrite them instead of throwing an error.
         #[clap(long, short, value_parser)]
         overwrite: bool,
+
+        /// When adding Paper, if you only want to add the jar and not have all the other plugins installed, use this flag.
+        #[clap(long = "jar-only", short, value_parser)]
+        jar_only: bool,
     },
     /// Add a BungeeCord server.
     BungeeCord {
@@ -137,6 +141,10 @@ pub enum AddCommands {
         /// If BungeeCord or any other generated files already exist, overwrite them instead of throwing an error.
         #[clap(long, short, value_parser)]
         overwrite: bool,
+
+        /// When adding BungeeCord, if you only want to add the jar and not have all the other plugins installed, use this flag.
+        #[clap(long = "jar-only", short, value_parser)]
+        jar_only: bool,
     },
     /// Add a start file.
     StartFile {

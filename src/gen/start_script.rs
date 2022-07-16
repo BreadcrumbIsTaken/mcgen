@@ -12,7 +12,10 @@ use crate::consts::scripts::{
 ///
 /// The script's file extension will be different based on which operating system you use.
 /// The RAM given is defaulted to 1 gigabyte. Feel free to change this as you please.
-pub fn generate_start_script_bungeecord(dir: &str, overwrite: bool) -> Result<(), Box<dyn std::error::Error>> {
+pub fn generate_start_script_bungeecord(
+    dir: &str,
+    overwrite: bool,
+) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(&dir).join("bungeecord");
 
     let file_paths = vec![path.join("start.sh"), path.join("start.bat")];
@@ -75,10 +78,7 @@ pub fn generate_start_script_paper(
     if exists && !overwrite {
         Err(Box::new(Error::new(
             std::io::ErrorKind::AlreadyExists,
-            format!(
-                "The directory, '{}', already exists!",
-                path.display()
-            ),
+            format!("The directory, '{}', already exists!", path.display()),
         )))
     } else {
         for file_path in file_paths {

@@ -22,6 +22,7 @@ pub async fn download_paper(
     using_bungeecord: bool,
     accept_eula: bool,
     overwrite: bool,
+    jar_only: bool,
     config: Option<&Config<'_>>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(dir);
@@ -113,20 +114,6 @@ pub async fn download_paper(
         }
         bar.finish_at_current_pos();
 
-        if let Some(conf) = &config {
-            if let Some(data) = &conf.config {
-                let plugins = data
-                    .default_plugins
-                    .as_ref()
-                    .unwrap()
-                    .paper_plugins
-                    .as_ref();
-                if let Some(plugins_list) = plugins {
-                    download_plugins(paper_path.clone().as_path(), plugins_list, overwrite).await?;
-                }
-            }
-        }
-
         generate_version_file(
             paper_path.clone().as_path(),
             format!(
@@ -139,11 +126,28 @@ pub async fn download_paper(
             ),
         )?;
 
-        if accept_eula {
-            generate_eula(&paper_path.display().to_string()).unwrap_or_else(|err| {
-                eprintln!("{} {}", "Error generating EULA! Error:".red(), err);
-                std::process::exit(1);
-            });
+        if !jar_only {
+            if let Some(conf) = &config {
+                if let Some(data) = &conf.config {
+                    let plugins = data
+                        .default_plugins
+                        .as_ref()
+                        .unwrap()
+                        .paper_plugins
+                        .as_ref();
+                    if let Some(plugins_list) = plugins {
+                        download_plugins(paper_path.clone().as_path(), plugins_list, overwrite)
+                            .await?;
+                    }
+                }
+            }
+
+            if accept_eula {
+                generate_eula(&paper_path.display().to_string()).unwrap_or_else(|err| {
+                    eprintln!("{} {}", "Error generating EULA! Error:".red(), err);
+                    std::process::exit(1);
+                });
+            }
         }
     }
 

@@ -22,17 +22,18 @@ pub async fn generate_server(
     dont_generate_start_scripts: bool,
     only_bungeecord: bool,
     overwrite: bool,
+    jar_only: bool,
     config: &Config<'_>,
 ) {
     if using_bungeecord {
-        download_bungeecord(dir, overwrite, Some(config))
+        download_bungeecord(dir, overwrite, jar_only, Some(config))
             .await
             .unwrap_or_else(|err| {
                 eprintln!("{} {}", "Error downloading BungeeCord!".red(), err);
                 std::process::exit(1);
             });
 
-        if !dont_generate_start_scripts {
+        if !dont_generate_start_scripts || !jar_only {
             generate_start_script_bungeecord(dir, overwrite).unwrap_or_else(|err| {
                 eprintln!(
                     "{} {}",
@@ -45,20 +46,26 @@ pub async fn generate_server(
     }
 
     if !only_bungeecord {
-        download_paper(dir, using_bungeecord, accept_eula, overwrite, Some(config))
-            .await
-            .unwrap_or_else(|err| {
-                eprintln!("{} {}", "Error downloading Paper!".red(), err);
-                std::process::exit(1);
-            });
+        download_paper(
+            dir,
+            using_bungeecord,
+            accept_eula,
+            overwrite,
+            jar_only,
+            Some(config),
+        )
+        .await
+        .unwrap_or_else(|err| {
+            eprintln!("{} {}", "Error downloading Paper!".red(), err);
+            std::process::exit(1);
+        });
 
-        if !dont_generate_start_scripts {
-            generate_start_script_paper(dir, aikars_flags, using_bungeecord, overwrite).unwrap_or_else(
-                |err| {
+        if !dont_generate_start_scripts || !jar_only {
+            generate_start_script_paper(dir, aikars_flags, using_bungeecord, overwrite)
+                .unwrap_or_else(|err| {
                     eprintln!("{} {}", "Error generating Paper start script!".red(), err);
                     std::process::exit(1);
-                },
-            );
+                });
         }
     }
 }

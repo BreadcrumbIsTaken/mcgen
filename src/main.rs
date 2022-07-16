@@ -51,7 +51,8 @@ async fn main() {
                 dont_generate_start_scripts,
                 false,
                 false,
-                &config
+                false,
+                &config,
             )
             .await;
         }
@@ -69,7 +70,7 @@ async fn main() {
                 directory,
                 name,
                 url,
-                overwrite
+                overwrite,
             } => {
                 add_plugin_to_existing_server(directory, name, url, overwrite)
                     .await
@@ -83,8 +84,15 @@ async fn main() {
                 aikars_flags,
                 dont_generate_start_scripts,
                 overwrite,
+                jar_only,
             } => {
-                println!("{} {} {} '{}'", "Adding".green(), "Paper".bold().cyan(), "to directory:".green(), directory);
+                println!(
+                    "{} {} {} '{}'",
+                    "Adding".green(),
+                    "Paper".bold().cyan(),
+                    "to directory:".green(),
+                    directory
+                );
                 println!("---");
                 generate_server(
                     &directory,
@@ -94,6 +102,7 @@ async fn main() {
                     dont_generate_start_scripts,
                     false,
                     overwrite,
+                    jar_only,
                     &config,
                 )
                 .await;
@@ -103,8 +112,15 @@ async fn main() {
                 aikars_flags,
                 dont_generate_start_scripts,
                 overwrite,
+                jar_only,
             } => {
-                println!("{} {} {} '{}'", "Adding".green(), "BungeeCord".bold().cyan(), "to directory:".green(), directory);
+                println!(
+                    "{} {} {} '{}'",
+                    "Adding".green(),
+                    "BungeeCord".bold().cyan(),
+                    "to directory:".green(),
+                    directory
+                );
                 println!("---");
                 generate_server(
                     &directory,
@@ -114,6 +130,7 @@ async fn main() {
                     dont_generate_start_scripts,
                     true,
                     overwrite,
+                    jar_only,
                     &config,
                 )
                 .await;
@@ -123,11 +140,10 @@ async fn main() {
                 aikars_flags,
                 overwrite,
             } => {
-                generate_start_script_paper(&directory, aikars_flags, false, overwrite).unwrap_or_else(
-                    |err| {
+                generate_start_script_paper(&directory, aikars_flags, false, overwrite)
+                    .unwrap_or_else(|err| {
                         eprintln!("{} {}", "Error adding start script! Error:".red(), err);
-                    },
-                );
+                    });
             }
         },
         Commands::Config { regenerate } => {

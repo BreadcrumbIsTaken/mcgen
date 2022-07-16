@@ -30,7 +30,11 @@ pub async fn download_plugin(
         let json_data = res.json::<BuildData>().await?;
 
         // TODO: What to do if the plugin already exists and overwrite is false.
-        if plugins_folder.join(&json_data.artifacts.as_ref().unwrap()[0].file_name).exists() && !overwrite {
+        if plugins_folder
+            .join(&json_data.artifacts.as_ref().unwrap()[0].file_name)
+            .exists()
+            && !overwrite
+        {
             eprintln!(
                 "{} '{}' {}",
                 "The plugin,".red(),
@@ -43,7 +47,7 @@ pub async fn download_plugin(
                 &(*plugins_folder).join(&json_data.artifacts.as_ref().unwrap()[0].file_name),
             )
             .await?;
-    
+
             println!(
                 "   Downloading plugin {} build {}",
                 name.bold().yellow(),
@@ -55,7 +59,7 @@ pub async fn download_plugin(
                     .bold()
                     .yellow()
             );
-    
+
             let mut jar_stream = client
                 .get(format!(
                     "{}artifact/{}",
@@ -65,7 +69,7 @@ pub async fn download_plugin(
                 .send()
                 .await?
                 .bytes_stream();
-    
+
             // Setting the length to 1200 by default for now until I can figure out how
             // to get the length of the byte stream (jar_stream) without having it be consumed or have it's ownership taken.
             let bar = ProgressBar::new(10);
@@ -76,13 +80,13 @@ pub async fn download_plugin(
                     .progress_chars("█▒-")
                     .tick_strings(&["◜", "◠", "◝", "◞", "◡", "◟"]),
             );
-    
+
             while let Some(item) = jar_stream.next().await {
                 bar.inc(1);
                 jar_file.write_all(&item.unwrap()).await?;
             }
             bar.finish_at_current_pos();
-    
+
             add_plugin_to_version_file(
                 plugins_folder,
                 name,
@@ -100,7 +104,7 @@ pub async fn download_plugin(
 pub async fn download_plugins(
     path: &Path,
     plugins: &Vec<HashMap<String, String>>,
-    overwrite: bool
+    overwrite: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     for plugin in plugins {
         download_plugin(path, plugin, overwrite).await?;

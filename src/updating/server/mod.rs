@@ -125,13 +125,19 @@ pub async fn update_server(
                         false,
                         false,
                         false,
+                        false,
                         None,
                     )
                     .await?;
                 } else {
                     fs::remove_file(path.parent().unwrap().join("BungeeCord.jar")).await?;
-                    download_bungeecord(&path.parent().unwrap().display().to_string(), false, None)
-                        .await?;
+                    download_bungeecord(
+                        &path.parent().unwrap().display().to_string(),
+                        false,
+                        false,
+                        None,
+                    )
+                    .await?;
                 }
             }
         }
