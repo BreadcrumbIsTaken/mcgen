@@ -28,6 +28,7 @@
 |flags|description|example usage|long name|
 | :-: |    :-:    |     :-:     |   :-:   |
 |-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html)|`mcgen add bungeecord myserver -a`|--aikars-flags|
+|-e   |Install BungeeCord in the given directory, instead of making a folder called 'bungeecord' and putting it in there|`mcgen add bungeecord myserver -e`|--here|
 |-j   |When adding BungeeCord, if you only want to add the jar and not have all the other plugins installed, use this flag|`mcgen add bungeecord myserver -j`|--jar-only|
 |-n   |By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.|`mcgen add bungeecord myserver -n`|--no-start-scripts|
 |-o   |If BungeeCord or any other generated files already exist, overwrite them instead of throwing an error.|`mcgen add bungeecord myserver -o`|--overwrite|

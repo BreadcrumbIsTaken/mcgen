@@ -119,7 +119,11 @@ pub async fn update_server(
                 println!("Updating {}. . .", name.bold().cyan());
 
                 if name == "Paper" {
-                    fs::remove_file(path.parent().unwrap().join("paper.jar")).await?;
+                    if let Some(jar_path) = path.parent() {
+                        if jar_path.join("paper.jar").exists() {
+                            fs::remove_file(jar_path.join("paper.jar")).await?;
+                        }
+                    }
                     download_paper(
                         &path.parent().unwrap().display().to_string(),
                         false,
@@ -130,11 +134,16 @@ pub async fn update_server(
                     )
                     .await?;
                 } else {
-                    fs::remove_file(path.parent().unwrap().join("BungeeCord.jar")).await?;
+                    if let Some(jar_path) = path.parent() {
+                        if jar_path.join("BungeeCord.jar").exists() {
+                            fs::remove_file(jar_path.join("BungeeCord.jar")).await?;
+                        }
+                    }
                     download_bungeecord(
                         &path.parent().unwrap().display().to_string(),
                         false,
                         false,
+                        true,
                         None,
                     )
                     .await?;

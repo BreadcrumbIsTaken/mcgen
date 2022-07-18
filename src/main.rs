@@ -1,5 +1,6 @@
 //! # mcgen
 //! ## Generate a Minecraft server in seconds!
+#![allow(clippy::too_many_arguments)]
 mod adding;
 mod cli;
 mod config;
@@ -16,7 +17,7 @@ use gen::start_script::generate_start_script_paper;
 use std::path::Path;
 
 use crate::{
-    adding::add_plugin_to_existing_server, config::Config, gen::generation::generate_server,
+    adding::add_plugin_to_existing_server, config::Config, gen::generate_server,
     updating::update,
 };
 
@@ -49,6 +50,7 @@ async fn main() {
                 aikars_flags,
                 accept_eula,
                 dont_generate_start_scripts,
+                false,
                 false,
                 false,
                 false,
@@ -103,6 +105,7 @@ async fn main() {
                     false,
                     overwrite,
                     jar_only,
+                    false,
                     &config,
                 )
                 .await;
@@ -113,6 +116,7 @@ async fn main() {
                 dont_generate_start_scripts,
                 overwrite,
                 jar_only,
+                here,
             } => {
                 println!(
                     "{} {} {} '{}'",
@@ -131,6 +135,7 @@ async fn main() {
                     true,
                     overwrite,
                     jar_only,
+                    here,
                     &config,
                 )
                 .await;

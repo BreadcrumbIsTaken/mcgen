@@ -1,4 +1,4 @@
-use std::{io::Error, path::Path};
+use std::path::Path;
 
 use colored::*;
 use futures_util::StreamExt;
@@ -21,39 +21,36 @@ pub async fn download_bungeecord(
     dir: &str,
     overwrite: bool,
     jar_only: bool,
+    here: bool,
     config: Option<&Config<'_>>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(dir);
-    // Note: consider adding error messages.
-    if (path.join("BungeeCord.jar").exists() || path.join("bungeecord/BungeeCord.jar").exists())
-        && !overwrite
-    {
-        Err(Box::new(Error::new(
-            std::io::ErrorKind::AlreadyExists,
-            format!(
-                "BungeeCord already exists in directory, '{}'.",
-                path.display()
-            ),
-        )))
+
+    let bungeecord_path = if here {
+        path.to_path_buf()
     } else {
-        let bungeecord_path = path.join("bungeecord");
-        // Expect the `Err` with a permissions error.
-        // The path does not exist so it cannot error due to the path already existing.
-        create_dir_all(bungeecord_path.clone())
-            .await
-            .expect("Could not create the server directory! Do you have the correct permissions?");
+        path.join("bungeecord")
+    };
+    let bungeecord_path = bungeecord_path.as_path();
+
+    if bungeecord_path.join("BungeeCord.jar").exists() && !overwrite {
+        eprintln!(
+            "{} '{}'!",
+            "BungeeCord already exists in directory,".red(),
+            path.display()
+        );
+        std::process::exit(1);
+    } else {
+        create_dir_all(bungeecord_path).await?;
 
         let client = Client::builder().build()?;
         let res = client.get(BUNGEECORD_JSON_API_URL).send().await?;
 
         let json_data = res.json::<BuildData>().await?;
 
-        let mut jar_file = File::create(
-            bungeecord_path
-                .as_path()
-                .join(&json_data.artifacts.as_ref().unwrap()[0].file_name),
-        )
-        .await?;
+        let mut jar_file =
+            File::create(bungeecord_path.join(&json_data.artifacts.as_ref().unwrap()[0].file_name))
+                .await?;
 
         println!(
             "Downloading {} build {}",
@@ -89,7 +86,7 @@ pub async fn download_bungeecord(
         bar.finish_at_current_pos();
 
         generate_version_file(
-            bungeecord_path.clone().as_path(),
+            bungeecord_path,
             format!(
                 r#"server:
     - BungeeCord:
@@ -108,17 +105,11 @@ pub async fn download_bungeecord(
                         .bungeecord_plugins
                         .as_ref();
                     if let Some(plugins_list) = plugins {
-                        download_plugins(
-                            bungeecord_path.clone().as_path(),
-                            plugins_list,
-                            overwrite,
-                        )
-                        .await?;
+                        download_plugins(bungeecord_path, plugins_list, overwrite).await?;
                     }
                 }
             }
         }
-
-        Ok(())
     }
+    Ok(())
 }

@@ -1,8 +1,5 @@
-use std::{
-    fs::File,
-    io::{Error, Write},
-    path::Path,
-};
+use colored::*;
+use std::{fs::File, io::Write, path::Path};
 
 use crate::consts::scripts::{
     AIKARS_FLAGS_PAPER_START_SCRIPT, BUNGEECORD_START_SCRIPT, REGULAR_PAPER_START_SCRIPT,
@@ -15,8 +12,15 @@ use crate::consts::scripts::{
 pub fn generate_start_script_bungeecord(
     dir: &str,
     overwrite: bool,
+    here: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let path = Path::new(&dir).join("bungeecord");
+    // let path = Path::new(&dir).join("bungeecord");
+    let path = if here {
+        Path::new(&dir).to_path_buf()
+    } else {
+        Path::new(&dir).join("bungeecord")
+    };
+    let path = path.as_path();
 
     let file_paths = vec![path.join("start.sh"), path.join("start.bat")];
     let mut exists = false;
@@ -30,21 +34,20 @@ pub fn generate_start_script_bungeecord(
     }
 
     if exists && !overwrite {
-        Err(Box::new(Error::new(
-            std::io::ErrorKind::AlreadyExists,
-            format!(
-                "Start files already exists in directory {}!",
-                path.display()
-            ),
-        )))
+        eprintln!(
+            "{} '{}'",
+            "Start files already exist in directory:".red(),
+            path.display()
+        );
+        std::process::exit(1);
     } else {
         for file_path in file_paths {
             let mut start_script = File::create(file_path)?;
 
             start_script.write_all(BUNGEECORD_START_SCRIPT.as_bytes())?;
         }
-        Ok(())
     }
+    Ok(())
 }
 
 /// Generates a basic start script for Paper.
@@ -76,10 +79,12 @@ pub fn generate_start_script_paper(
     }
 
     if exists && !overwrite {
-        Err(Box::new(Error::new(
-            std::io::ErrorKind::AlreadyExists,
-            format!("The directory, '{}', already exists!", path.display()),
-        )))
+        eprintln!(
+            "{} '{}'",
+            "Start files already exist in directory:".red(),
+            path.display()
+        );
+        std::process::exit(1);
     } else {
         for file_path in file_paths {
             let mut start_script = File::create(file_path)?;
@@ -89,6 +94,6 @@ pub fn generate_start_script_paper(
                 start_script.write_all(REGULAR_PAPER_START_SCRIPT.as_bytes())?;
             }
         }
-        Ok(())
     }
+    Ok(())
 }

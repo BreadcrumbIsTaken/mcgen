@@ -145,6 +145,10 @@ pub enum AddCommands {
         /// When adding BungeeCord, if you only want to add the jar and not have all the other plugins installed, use this flag.
         #[clap(long = "jar-only", short, value_parser)]
         jar_only: bool,
+
+        /// Install BungeeCord in the given directory, instead of making a folder called 'bungeecord' and putting it in there.
+        #[clap(long, short = 'e', value_parser)]
+        here: bool,
     },
     /// Add a start file.
     StartFile {
