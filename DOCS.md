@@ -50,7 +50,7 @@ mcgen add bungeecord . -a
 | :-: |    :-:    |     :-:     |   :-:   |
 |-a   |Choose whether or not to use [Aikar's Flags](https://aikar.co/mcflags.html).|`mcgen add paper myserver -a`|--aikars-flags|
 |-j   |When adding Paper, if you only want to add the jar and not have all the other plugins installed, use this flag|`mcgen add paper myserver -j`|--jar-only|
-|-e   |Accept to Minecraft's EULA. Wilmcgen add paper myservermcgen gen myserver -e`|--accept-eula|
+|--accept-eula     |Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the EULA: https://aka.ms/MinecraftEULA|`mcgen add paper myserver -accept-eula`|--accept-eula|
 |-n   |By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.|`mcgen add paper myserver -n`|--no-start-scripts|
 |-o   |If Paper or any other generated files already exist, overwrite them instead of throwing an error.|`mcgen add paper myserver -o`|--overwrite|
 
@@ -71,6 +71,7 @@ mcgen add paper . -n -e
 ##### Flags
 |flags|description|example usage|long name|
 | :-: |    :-:    |     :-:     |   :-:   |
+|-e   |Add a plugin in the given directory, instead of making a folder called 'plugins' and putting it in there|`mcgen add plugin myserver Denizen https://ci.citizensnpcs.co/job/Denizen -e`|--here|
 |-o   |If the plugin already exists, overwrite them instead of throwing an error|`mcgen add plugin myserver Denizen https://ci.citizensnpcs.co/job/Denizen -o`|--overwrite|
 
 ###### Example

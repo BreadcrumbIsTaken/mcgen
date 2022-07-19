@@ -103,7 +103,7 @@ pub async fn download_paper(
         bar.enable_steady_tick(100);
         bar.set_style(
             ProgressStyle::default_bar()
-                .template("[{bytes_per_sec}] {bar:50.green/blue} {spinner}")
+                .template("[{bytes_per_sec}] {bar:50.green/blue} {spinner} {msg}")
                 .progress_chars("█▒-")
                 .tick_strings(&["◜", "◠", "◝", "◞", "◡", "◟"]),
         );
@@ -112,7 +112,7 @@ pub async fn download_paper(
             jar_file.write_all(&item.unwrap()).await?;
             bar.inc(1);
         }
-        bar.finish_at_current_pos();
+        bar.finish_with_message("Finished!".bold().green().to_string());
 
         generate_version_file(
             paper_path.clone().as_path(),
@@ -136,8 +136,13 @@ pub async fn download_paper(
                         .paper_plugins
                         .as_ref();
                     if let Some(plugins_list) = plugins {
-                        download_plugins(paper_path.clone().as_path(), plugins_list, overwrite)
-                            .await?;
+                        download_plugins(
+                            paper_path.clone().as_path(),
+                            plugins_list,
+                            overwrite,
+                            false,
+                        )
+                        .await?;
                     }
                 }
             }

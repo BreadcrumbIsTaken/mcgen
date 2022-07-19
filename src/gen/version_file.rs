@@ -35,22 +35,26 @@ pub async fn add_plugin_to_version_file(
     match previous_data.plugins {
         Some(ref mut previous) => {
             for i in 0..previous.len() {
+                // Check if the plugin's name is already in the previous contents.
                 if previous.get(i).unwrap().get(name).is_some() {
-                    if let Some(ref content) = new_contents.plugins {
+                    // Get list of plugins to add.
+                    if let Some(ref mut content) = new_contents.plugins {
+                        // Get the map of data from the new plugin.
                         if let Some(hm) = content.get(i).cloned() {
+                            // Get the plugin's data
                             if let Some(mut data) = hm.get(name).cloned() {
-                                let pos = content.iter().position(|x| x == &hm);
-                                if let Some(position) = pos {
-                                    new_contents.plugins.as_mut().unwrap().remove(position);
+                                let position = content.iter().position(|x| x == &hm);
+                                if let Some(pos) = position {
+                                    content.remove(pos);
                                 }
                                 data.build = build;
                                 data.file_name = Some(file_name.clone());
                                 data.url = url.to_string();
-                                new_contents
-                                    .plugins
-                                    .as_mut()
-                                    .unwrap()
-                                    .push(HashMap::from([(name.to_owned(), data)]));
+                                let new_plugin = HashMap::from([(name.to_owned(), data)]);
+                                if !content.contains(&new_plugin) {
+                                    // Add plugin to list of new data to be written.
+                                    content.push(new_plugin);
+                                }
                             }
                         }
                     }
@@ -63,7 +67,14 @@ pub async fn add_plugin_to_version_file(
                     };
                     match new_contents.plugins {
                         Some(ref mut plugins) => {
-                            plugins.push(HashMap::from([(name.to_owned(), data)]))
+                            let plugin = HashMap::from([(name.to_owned(), data)]);
+                            let position = plugins.iter().position(|x| x == &plugin);
+                            if let Some(pos) = position {
+                                plugins.remove(pos);
+                            }
+                            if !plugins.contains(&plugin) {
+                                plugins.push(plugin);
+                            }
                         }
                         None => {
                             new_contents.plugins =

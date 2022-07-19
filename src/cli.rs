@@ -87,6 +87,10 @@ pub enum AddCommands {
         /// If the plugin already exists, overwrite them instead of throwing an error.
         #[clap(long, short, value_parser)]
         overwrite: bool,
+
+        /// Add a plugin in the given directory, instead of making a folder called 'plugins' and putting it in there
+        #[clap(long, short = 'e', value_parser)]
+        here: bool,
     },
     /// Add a Paper server.
     Paper {
@@ -146,7 +150,7 @@ pub enum AddCommands {
         #[clap(long = "jar-only", short, value_parser)]
         jar_only: bool,
 
-        /// Install BungeeCord in the given directory, instead of making a folder called 'bungeecord' and putting it in there.
+        /// Add BungeeCord in the given directory, instead of making a folder called 'bungeecord' and putting it in there.
         #[clap(long, short = 'e', value_parser)]
         here: bool,
     },

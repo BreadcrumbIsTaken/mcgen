@@ -106,17 +106,21 @@ pub async fn update_server(
         }
 
         if !version_outdated && !build_outdated {
-            println!("{} {}", name.bold().cyan(), "is up to date!".underline());
+            println!(
+                "    {} {}",
+                name.bold().cyan(),
+                "is up to date!".underline()
+            );
         } else if version_outdated || build_outdated {
             println!(
-                "{} is {} up to date. {}",
+                "    {} is {} up to date. {}",
                 name.bold().cyan(),
                 "not".underline(),
                 to_print
             );
 
             if !check {
-                println!("Updating {}. . .", name.bold().cyan());
+                println!("    Updating {}. . .", name.bold().cyan());
 
                 if name == "Paper" {
                     if let Some(jar_path) = path.parent() {

@@ -74,7 +74,7 @@ pub async fn download_bungeecord(
         bar.enable_steady_tick(100);
         bar.set_style(
             ProgressStyle::default_bar()
-                .template("[{bytes_per_sec}] {bar:50.green/blue} {spinner}")
+                .template("[{bytes_per_sec}] {bar:50.green/blue} {spinner} {msg}")
                 .progress_chars("█▒-")
                 .tick_strings(&["◜", "◠", "◝", "◞", "◡", "◟"]),
         );
@@ -83,7 +83,7 @@ pub async fn download_bungeecord(
             bar.inc(1);
             jar_file.write_all(&item.unwrap()).await?;
         }
-        bar.finish_at_current_pos();
+        bar.finish_with_message("Finished!".bold().green().to_string());
 
         generate_version_file(
             bungeecord_path,
@@ -105,7 +105,7 @@ pub async fn download_bungeecord(
                         .bungeecord_plugins
                         .as_ref();
                     if let Some(plugins_list) = plugins {
-                        download_plugins(bungeecord_path, plugins_list, overwrite).await?;
+                        download_plugins(bungeecord_path, plugins_list, overwrite, false).await?;
                     }
                 }
             }

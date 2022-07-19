@@ -15,8 +15,13 @@ pub async fn download_plugin(
     path: &Path,
     plugin: &HashMap<String, String>,
     overwrite: bool,
+    here: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let plugins_path_folder = path.join("plugins");
+    let plugins_path_folder = if here {
+        path.to_path_buf()
+    } else {
+        path.join("plugins")
+    };
     let plugins_folder = plugins_path_folder.as_path();
 
     create_dir_all(plugins_folder).await?;
@@ -49,7 +54,7 @@ pub async fn download_plugin(
             .await?;
 
             println!(
-                "   Downloading plugin {} build {}",
+                "    Downloading plugin {} build {}",
                 name.bold().yellow(),
                 json_data
                     .build
@@ -76,7 +81,7 @@ pub async fn download_plugin(
             bar.enable_steady_tick(100);
             bar.set_style(
                 ProgressStyle::default_bar()
-                    .template("    [{bytes_per_sec}] {bar:50.green/blue} {spinner}")
+                    .template("    [{bytes_per_sec}] {bar:50.green/blue} {spinner} {msg}")
                     .progress_chars("█▒-")
                     .tick_strings(&["◜", "◠", "◝", "◞", "◡", "◟"]),
             );
@@ -85,7 +90,7 @@ pub async fn download_plugin(
                 bar.inc(1);
                 jar_file.write_all(&item.unwrap()).await?;
             }
-            bar.finish_at_current_pos();
+            bar.finish_with_message("Finished!".bold().green().to_string());
 
             add_plugin_to_version_file(
                 plugins_folder,
@@ -105,9 +110,10 @@ pub async fn download_plugins(
     path: &Path,
     plugins: &Vec<HashMap<String, String>>,
     overwrite: bool,
+    here: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     for plugin in plugins {
-        download_plugin(path, plugin, overwrite).await?;
+        download_plugin(path, plugin, overwrite, here).await?;
     }
     Ok(())
 }

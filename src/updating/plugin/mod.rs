@@ -35,20 +35,20 @@ pub async fn update_plugin(
 
         if !build_outdated {
             println!(
-                "Plugin '{}' {}",
+                "    Plugin '{}' {}",
                 name.yellow(),
                 "is up to date!".underline()
             );
         } else {
             println!(
-                "Plugin '{}' is {} up to date. Build is behind by {}",
+                "    Plugin '{}' is {} up to date. Build is behind by {}!",
                 name.yellow(),
                 "not".underline(),
                 builds_behind
             );
 
             if !check {
-                println!("Updating plugin {}. . .", name.yellow());
+                println!("    Updating plugin {}. . .", name.yellow());
                 if let Some(plugin_path) = &mcgen_file_data.file_name {
                     if path.parent().unwrap().join(&plugin_path).exists() {
                         fs::remove_file(path.parent().unwrap().join(&plugin_path)).await?;
@@ -59,6 +59,7 @@ pub async fn update_plugin(
                     path.parent().unwrap().parent().unwrap(),
                     &HashMap::from([(name.to_owned(), mcgen_file_data.url.to_owned())]),
                     true,
+                    false,
                 )
                 .await?;
             }

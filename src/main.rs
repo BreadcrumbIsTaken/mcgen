@@ -17,8 +17,7 @@ use gen::start_script::generate_start_script_paper;
 use std::path::Path;
 
 use crate::{
-    adding::add_plugin_to_existing_server, config::Config, gen::generate_server,
-    updating::update,
+    adding::add_plugin_to_existing_server, config::Config, gen::generate_server, updating::update,
 };
 
 #[tokio::main]
@@ -73,8 +72,9 @@ async fn main() {
                 name,
                 url,
                 overwrite,
+                here,
             } => {
-                add_plugin_to_existing_server(directory, name, url, overwrite)
+                add_plugin_to_existing_server(directory, name, url, overwrite, here)
                     .await
                     .unwrap_or_else(|err| {
                         eprintln!("{} {}", "Error adding plugin! Error:".red(), err)
