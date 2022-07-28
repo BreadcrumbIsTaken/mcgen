@@ -18,6 +18,7 @@ pub async fn update_server(
     server: &HashMap<String, ServerVersionDetails>,
     path: &Path,
     check: bool,
+    dont_update_version: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     for (name, mcgen_file_data) in server {
         let url: &str;
@@ -40,6 +41,7 @@ pub async fn update_server(
         let version_outdated: bool;
         let build_outdated: bool;
         let builds_behind: u32;
+        let mut latest_version: Option<String> = None;
 
         if !updating_paper {
             // BungeeCord does not use versions like Paper so it will always be false.
@@ -53,16 +55,34 @@ pub async fn update_server(
                 builds_behind = 0;
             }
         } else {
-            // Paper is more complex as it uses it's own API, unlike BungeeCord which uses Jenkins.
-            let latest_version = receiving_version_data
-                .versions
-                .as_ref()
-                .unwrap()
-                .last()
-                .ok_or("Could not get latest Paper version.");
+            latest_version = if dont_update_version {
+                if let Some(ref ver) = mcgen_file_data.version {
+                    Some(ver.to_owned())
+                } else {
+                    Some(
+                        receiving_version_data
+                            .versions
+                            .as_ref()
+                            .unwrap()
+                            .last()
+                            .ok_or("Could not get latest Paper version.")?
+                            .to_owned(),
+                    )
+                }
+            } else {
+                Some(
+                    receiving_version_data
+                        .versions
+                        .as_ref()
+                        .unwrap()
+                        .last()
+                        .ok_or("Could not get latest Paper version.")?
+                        .to_owned(),
+                )
+            };
 
             // Checks if the version numbers are the same. If they aren't, then Paper is outdated and should be updated.
-            if *mcgen_file_data.version.as_ref().unwrap() != *latest_version.unwrap() {
+            if *mcgen_file_data.version.as_ref().unwrap() != *latest_version.as_ref().unwrap() {
                 version_outdated = true;
             } else {
                 version_outdated = false;
@@ -72,7 +92,7 @@ pub async fn update_server(
                 .get(format!(
                     "{}/versions/{}",
                     PAPER_JSON_API_URL,
-                    latest_version.unwrap()
+                    latest_version.as_ref().unwrap()
                 ))
                 .send()
                 .await?;
@@ -134,7 +154,7 @@ pub async fn update_server(
                         false,
                         false,
                         false,
-                        None,
+                        latest_version,
                         None,
                     )
                     .await?;

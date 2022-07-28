@@ -59,15 +59,19 @@ async fn main() {
             )
             .await;
         }
-        Commands::Update { directories, check } => {
-            update(directories, check).await.unwrap_or_else(|err| {
+        Commands::Update {
+            directories,
+            check,
+            dont_update_version,
+        } => update(directories, check, dont_update_version)
+            .await
+            .unwrap_or_else(|err| {
                 eprintln!(
                     "{} {}",
                     "Error updating server and/or plugins! Error:".red(),
                     err
                 )
-            })
-        }
+            }),
         Commands::Add(add) => match add.to_add {
             AddCommands::Plugin {
                 directory,

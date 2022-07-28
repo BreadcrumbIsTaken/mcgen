@@ -16,6 +16,7 @@ use crate::updating::{
 pub async fn update(
     directories: Vec<String>,
     check: bool,
+    dont_update_version: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let dirs: String = if directories.is_empty() {
         "Current directory".to_string()
@@ -57,7 +58,7 @@ pub async fn update(
         for (path, version_data) in data {
             if let Some(server_list) = version_data.server {
                 for server in server_list {
-                    update_server(&server, Path::new(&path), check).await?;
+                    update_server(&server, Path::new(&path), check, dont_update_version).await?;
                 }
             }
             if let Some(plugin_list) = version_data.plugins {
