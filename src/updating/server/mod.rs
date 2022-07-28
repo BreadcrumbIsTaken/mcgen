@@ -135,6 +135,7 @@ pub async fn update_server(
                         false,
                         false,
                         None,
+                        None,
                     )
                     .await?;
                 } else {

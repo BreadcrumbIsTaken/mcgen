@@ -38,6 +38,7 @@ async fn main() {
             aikars_flags,
             accept_eula,
             dont_generate_start_scripts,
+            version,
         } => {
             // yeah i think this looks funny too but it lets the terminal use colors :D
             println!("{} {}", "Creating a new server in directory:".green(), dir);
@@ -53,6 +54,7 @@ async fn main() {
                 false,
                 false,
                 false,
+                version,
                 &config,
             )
             .await;
@@ -87,6 +89,7 @@ async fn main() {
                 dont_generate_start_scripts,
                 overwrite,
                 jar_only,
+                version,
             } => {
                 println!(
                     "{} {} {} '{}'",
@@ -106,6 +109,7 @@ async fn main() {
                     overwrite,
                     jar_only,
                     false,
+                    version,
                     &config,
                 )
                 .await;
@@ -136,6 +140,7 @@ async fn main() {
                     overwrite,
                     jar_only,
                     here,
+                    None,
                     &config,
                 )
                 .await;

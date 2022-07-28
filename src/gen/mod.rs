@@ -28,6 +28,7 @@ pub async fn generate_server(
     overwrite: bool,
     jar_only: bool,
     here: bool,
+    version: Option<String>,
     config: &Config<'_>,
 ) {
     if using_bungeecord {
@@ -57,6 +58,7 @@ pub async fn generate_server(
             accept_eula,
             overwrite,
             jar_only,
+            version,
             Some(config),
         )
         .await

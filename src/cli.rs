@@ -36,6 +36,10 @@ pub enum Commands {
             verbatim_doc_comment
         )]
         dont_generate_start_scripts: bool,
+
+        /// Set the Minecraft version of Paper
+        #[clap(long = "minecraft-version", short, value_parser)]
+        version: Option<String>,
     },
     /// Updates plugins or server/bungeecord versions.
     #[clap(
@@ -122,6 +126,10 @@ pub enum AddCommands {
         /// When adding Paper, if you only want to add the jar and not have all the other plugins installed, use this flag.
         #[clap(long = "jar-only", short, value_parser)]
         jar_only: bool,
+
+        /// Set the Minecraft version of Paper
+        #[clap(long = "minecraft-version", short, value_parser)]
+        version: Option<String>,
     },
     /// Add a BungeeCord server.
     BungeeCord {

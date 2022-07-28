@@ -23,6 +23,7 @@ pub async fn download_paper(
     accept_eula: bool,
     overwrite: bool,
     jar_only: bool,
+    version: Option<String>,
     config: Option<&Config<'_>>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let path = Path::new(dir);
@@ -52,18 +53,22 @@ pub async fn download_paper(
 
         let json_data = res.json::<BuildData>().await?;
 
-        let latest_version = json_data
-            .versions
-            .as_ref()
-            .unwrap()
-            .last()
-            .ok_or("Could not get latest Paper version.");
+        let latest_version = if let Some(mc_version) = version {
+            mc_version
+        } else {
+            json_data
+                .versions
+                .as_ref()
+                .unwrap()
+                .last()
+                .ok_or("Could not get latest Paper version.")?
+                .to_owned()
+        };
 
         let version_builds = client
             .get(format!(
                 "{}/versions/{}",
-                PAPER_JSON_API_URL,
-                latest_version.unwrap()
+                PAPER_JSON_API_URL, latest_version
             ))
             .send()
             .await?;
@@ -78,22 +83,19 @@ pub async fn download_paper(
             .max_by(|x, y| x.cmp(y))
             .unwrap();
 
-        let file_name = format!("paper-{}-{}.jar", latest_version.unwrap(), latest_build);
+        let file_name = format!("paper-{}-{}.jar", latest_version, latest_build);
 
         let mut jar_file = File::create(paper_path.join("paper.jar")).await?;
 
         let paper_download_url = format!(
             "{}/versions/{}/builds/{}/downloads/{}",
-            PAPER_JSON_API_URL,
-            latest_version.unwrap(),
-            latest_build,
-            file_name
+            PAPER_JSON_API_URL, latest_version, latest_build, file_name
         );
 
         println!(
             "Downloading {} version {}, build {}",
             "Paper".bold().cyan(),
-            latest_version.unwrap().bold().cyan(),
+            latest_version.bold().cyan(),
             latest_build.to_string().bold().cyan(),
         );
 
@@ -121,8 +123,7 @@ pub async fn download_paper(
     - Paper: 
         version: {}
         build: {}"#,
-                latest_version.unwrap(),
-                latest_build
+                latest_version, latest_build
             ),
         )?;
 
