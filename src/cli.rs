@@ -55,7 +55,7 @@ pub enum Commands {
         #[clap(long, short, value_parser)]
         check: bool,
 
-        /// Don't update Minecraft version, if new version is avaliable.
+        /// Don't update Minecraft version if new version is avaliable.
         #[clap(long = "dont-update-version", short, value_parser)]
         dont_update_version: bool,
     },

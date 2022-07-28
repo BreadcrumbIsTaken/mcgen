@@ -118,6 +118,7 @@ mcgen config
 |-b   |Choose whether or not to have a BungeeCord network.|`mcgen gen myserver -b`|--bungeecord|
 |-e   |Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the [EULA](https://aka.ms/MinecraftEULA)|`mcgen gen myserver -e`|--accept-eula|
 |-n   |By using this option mcgen will not generate the start scripts. By not using this flag mcgen continues its default behavior and will generate the start scripts.|`mcgen gen myserver -n`|--no-start-scripts|
+|-v   |Set the Minecraft version of Paper.|`mcgen gen myserver -v 1.18.1`|--minecraft-version|
 
 ##### Example
 ```
@@ -134,7 +135,8 @@ mcgen gen myserver -b -a
 ##### Flags
 |flags|description|example usage|long name|
 | :-: |    :-:    |     :-:     |   :-:   |
-|-c   |Will check for any updates, but will not install them|`mcgen update myserver -c`|--check|
+|-c   |Will check for any updates, but will not install them.|`mcgen update myserver -c`|--check|
+|-d   |Don't update Minecraft version if new version is avaliable.|`mcgen update myserver -d`|--dont-update-version|
 
 ##### Example
 ```
