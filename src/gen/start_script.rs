@@ -101,6 +101,14 @@ pub fn generate_start_script_paper(
             } else {
                 start_script.write_all(regular_paper_contents.as_bytes())?;
             }
+
+            #[cfg(target_family = "unix")]
+            {
+                let metadata = start_script.metadata()?;
+                let mut permissions = metadata.permissions();
+                // Should set file permissions to be rwxr-xr-x on unix
+                permissions.set_mode(0o755);
+            }
         }
     }
     Ok(())
