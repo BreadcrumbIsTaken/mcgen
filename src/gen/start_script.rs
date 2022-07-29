@@ -1,5 +1,7 @@
 use colored::*;
 use std::{fs::File, io::Write, path::Path};
+#[cfg(target_family = "unix")]
+use std::os::unix::fs::PermissionsExt;
 
 use crate::consts::scripts::{
     AIKARS_FLAGS_PAPER_START_SCRIPT, BUNGEECORD_START_SCRIPT, REGULAR_PAPER_START_SCRIPT,
@@ -87,11 +89,17 @@ pub fn generate_start_script_paper(
         std::process::exit(1);
     } else {
         for file_path in file_paths {
+            let mut aikars_flags_contents = AIKARS_FLAGS_PAPER_START_SCRIPT.to_string();
+            let mut regular_paper_contents = REGULAR_PAPER_START_SCRIPT.to_string();
+            if file_path.file_name().unwrap() == "start.sh" {
+                aikars_flags_contents.insert_str(0, "#!/bin/bash\n");
+                regular_paper_contents.insert_str(0, "#!/bin/bash\n");
+            }
             let mut start_script = File::create(file_path)?;
             if aikars_flags {
-                start_script.write_all(AIKARS_FLAGS_PAPER_START_SCRIPT.as_bytes())?;
+                start_script.write_all(aikars_flags_contents.as_bytes())?;
             } else {
-                start_script.write_all(REGULAR_PAPER_START_SCRIPT.as_bytes())?;
+                start_script.write_all(regular_paper_contents.as_bytes())?;
             }
         }
     }
