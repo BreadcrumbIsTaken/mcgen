@@ -1,4 +1,4 @@
-use std::{collections::HashMap, path::Path};
+use std::{collections::HashMap, path::Path, time::Duration};
 
 use colored::*;
 use futures_util::StreamExt;
@@ -78,10 +78,10 @@ pub async fn download_plugin(
             // Setting the length to 1200 by default for now until I can figure out how
             // to get the length of the byte stream (jar_stream) without having it be consumed or have it's ownership taken.
             let bar = ProgressBar::new(10);
-            bar.enable_steady_tick(100);
+            bar.enable_steady_tick(Duration::from_millis(100));
             bar.set_style(
                 ProgressStyle::default_bar()
-                    .template("    [{bytes_per_sec}] {bar:50.green/blue} {spinner} {msg}")
+                    .template("    [{bytes_per_sec}] {bar:50.green/blue} {spinner} {msg}")?
                     .progress_chars("█▒-")
                     .tick_strings(&["◜", "◠", "◝", "◞", "◡", "◟"]),
             );

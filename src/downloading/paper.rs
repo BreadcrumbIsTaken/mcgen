@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::{path::Path, time::Duration};
 
 use colored::*;
 use futures_util::StreamExt;
@@ -102,10 +102,10 @@ pub async fn download_paper(
         let mut jar_data = client.get(paper_download_url).send().await?.bytes_stream();
 
         let bar = ProgressBar::new(2100);
-        bar.enable_steady_tick(100);
+        bar.enable_steady_tick(Duration::from_millis(100));
         bar.set_style(
             ProgressStyle::default_bar()
-                .template("[{bytes_per_sec}] {bar:50.green/blue} {spinner} {msg}")
+                .template("[{bytes_per_sec}] {bar:50.green/blue} {spinner} {msg}")?
                 .progress_chars("█▒-")
                 .tick_strings(&["◜", "◠", "◝", "◞", "◡", "◟"]),
         );
