@@ -20,11 +20,11 @@ pub enum Commands {
         #[clap(long, short, value_parser)]
         bungeecord: bool,
 
-        /// Choose whether or not to use Aikar's Flags (https://aikar.co/mcflags.html)
+        /// Choose whether or not to use Aikar's Flags (<https://aikar.co/mcflags.html>)
         #[clap(long = "aikars-flags", short, value_parser)]
         aikars_flags: bool,
 
-        /// Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the EULA: https://aka.ms/MinecraftEULA
+        /// Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the EULA: <https://aka.ms/MinecraftEULA>
         #[clap(long = "accept-eula", value_parser, verbatim_doc_comment)]
         accept_eula: bool,
 
@@ -106,11 +106,11 @@ pub enum AddCommands {
         #[clap(value_parser)]
         directory: String,
 
-        /// Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the EULA: https://aka.ms/MinecraftEULA
+        /// Accept to Minecraft's EULA. Will create the file automatically with `eula` set to `true`. By using this option, you agree to accept the EULA: <https://aka.ms/MinecraftEULA>
         #[clap(long = "accept-eula", value_parser, verbatim_doc_comment)]
         accept_eula: bool,
 
-        /// Choose whether or not to use Aikar's Flags (https://aikar.co/mcflags.html)
+        /// Choose whether or not to use Aikar's Flags <https://aikar.co/mcflags.html>
         #[clap(long = "aikars-flags", short, value_parser)]
         aikars_flags: bool,
 
@@ -141,7 +141,7 @@ pub enum AddCommands {
         #[clap(value_parser)]
         directory: String,
 
-        /// Choose whether or not to use Aikar's Flags (https://aikar.co/mcflags.html)
+        /// Choose whether or not to use Aikar's Flags (<https://aikar.co/mcflags.html>)
         #[clap(long = "aikars-flags", short, value_parser)]
         aikars_flags: bool,
 
@@ -171,7 +171,7 @@ pub enum AddCommands {
         /// The directory to add the start files to.
         #[clap(value_parser)]
         directory: String,
-        /// Choose whether or not to use Aikar's Flags (https://aikar.co/mcflags.html)
+        /// Choose whether or not to use Aikar's Flags (<https://aikar.co/mcflags.html>)
         #[clap(long = "aikars-flags", short, value_parser)]
         aikars_flags: bool,
 
