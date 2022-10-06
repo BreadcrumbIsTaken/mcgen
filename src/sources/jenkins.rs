@@ -18,12 +18,12 @@ impl Source for JenkinsSource {
         &self.label
     }
 
-    fn set_label(&mut self, label: &String) {
-        self.label = label.to_string();
+    fn set_mcgen_file_data(&mut self) {
+        todo!()
     }
 
     fn download(&self) {
-        todo!()
+        println!("downloading...");
     }
 
     fn run(&self) {

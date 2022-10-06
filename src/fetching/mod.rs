@@ -1,1 +1,1 @@
-mod res;
+pub mod res;

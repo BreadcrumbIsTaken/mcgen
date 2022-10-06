@@ -1,10 +1,8 @@
-use std::path::Path;
-
 /// Source trait for Sources.
 pub trait Source {
     fn get_label(&self) -> &String;
-    fn set_label(&mut self, label: &String);
     fn download(&self);
+    fn set_mcgen_file_data(&mut self);
     fn run(&self);
 }
 
@@ -25,6 +23,17 @@ impl SourceRegistry {
         S: Source + 'static,
     {
         self.sources.push(Box::new(source));
+    }
+
+    /// Run the source.
+    pub fn run_source(&self, label: String) {
+        // Search for the source based on the label.
+        for source in &self.sources {
+            let src = &(**source);
+            if *src.get_label() == label {
+                src.run();
+            }
+        }
     }
 
     // TESTING ONLY!
